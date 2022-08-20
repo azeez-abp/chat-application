@@ -1,0 +1,524 @@
+import { useState } from 'react'
+import axios from 'axios';
+import {
+    FormControl,
+    FormLabel,
+   // FormErrorMessage,
+   // FormHelperText,
+    Input,
+    Button, 
+    InputGroup,
+    InputRightElement,
+  
+  } from '@chakra-ui/react'
+
+export const Register = ()=> {
+
+    const [input, setInput] = useState(
+      {
+      name:"",
+      email:"",
+      password:"",
+      image:""
+    
+    })///if you dont indicate the 
+    //field it will give error
+   //const [isError, setIsError]  = useState(false)
+   const [show, setShow]  = useState(false)
+   const [img, setImg]  = useState(null)
+   const [showErr, setShowErr]  = useState({email:false,password:false,name:false})
+    
+    const handleInputChange = (e) =>{
+       e.preventDefault()
+ 
+        setInput({...input,[e.target.name]: e.target.value})
+    } 
+
+    const handleInputChangeFile = (e) =>{
+      e.preventDefault()
+
+       setImg({...img,...{image:e.target.files[0]}})
+   } 
+    const sendData   = async()=>{
+     
+      const options = {
+        method: 'POST',
+        headers: { 'content-Type': 'application/json' },
+        data: input,
+        url:'/api/chat/post-register',
+      };
+    
+      try {
+         let d  = await axios(options)
+         // let d  = await axios.post("/api/chat/post-register",formData,options)
+          console.log(d)
+      } catch (error) {
+         console.log(error," IS ERROR",error.message)
+      }
+
+
+    }
+ 
+    const submit  = async (e)=>{
+        e.preventDefault()
+        let err  = [false];
+        for(let inp in input){
+
+           // console.log(input[inp], typeof input[inp]," TYPE")
+         if(inp !=='image'){
+              if(input[inp]===''){
+                showErr[inp]  = true
+                setShowErr({...showErr})////if you dont spread it will not update
+                err[0]  = true
+                //setIsError(true)
+              
+            }else{
+              console.log(inp)
+              err[0]  =false
+              showErr[inp]  = false
+               setShowErr({...showErr})
+               //setIsError(false)
+            }
+        
+         }  
+           
+        }
+
+        if(!err[0]) uploadFile(img);
+      
+          
+          // console.log(err,isError)
+    
+    } 
+
+  const uploadFile  = async(f)=>{
+    const options = {
+        method: 'POST',
+        headers: { 'content-Type': 'application/json' },
+        data: f,
+        url:'/api/fileupload',
+      };
+    
+      try {
+         let d  = await axios(options)
+         // let d  = await axios.post("/api/chat/post-register",formData,options)
+          console.log(d)
+      } catch (error) {
+         console.log(error," IS ERROR",error.message)
+      }
+  }  
+  const handlePassworshow =()=>{setShow(!show/*set it to oppoite value*/)}  
+    return (
+       
+
+    
+      <FormControl >
+        <form  method="post" encType="multipart/form-data">
+      <FormLabel color="white">Name</FormLabel>
+
+        <Input
+          type='type'
+          value={input.name}
+          name ="name"
+          color="white"
+          size='md'
+          focusBorderColor='teal'
+          errorBorderColor='crimson'
+          isInvalid ={showErr.name}
+          onChange={handleInputChange}
+        />
+         {!showErr.name?'':(<p style={{float:'right',color:"crimson"}}>Name is required.</p>)}
+     
+    <FormLabel color="white">Email</FormLabel>
+        <Input
+          type='email'
+          value={input.email}
+          name ="email"
+          color="white"
+          size='md'
+          focusBorderColor='teal'
+          errorBorderColor='crimson'
+          isInvalid ={showErr.email }
+          onChange={handleInputChange}
+        />
+         {!showErr.email?'':(<p style={{float:'right',color:"crimson"}}>Email is required.</p>)}
+     
+      <FormLabel color="white">Password</FormLabel>
+        
+         <InputGroup size='md'>
+            <Input
+                pr='4.5rem'
+                type={show ? 'text' : 'password'}
+                placeholder='Enter password'
+                value={input.password}
+                name ="password"
+                color="white"
+                size='md'
+                focusBorderColor='teal'
+                isInvalid ={showErr.password}
+                errorBorderColor='crimson'
+                onChange={handleInputChange}
+            />
+            
+            <InputRightElement width='4.5rem'>
+                <Button h='1.75rem' size='sm' onClick={handlePassworshow}>
+                {show ? 'Hide' : 'Show'}
+                </Button>
+           </InputRightElement>
+          </InputGroup>
+          {!showErr.password?'':(<p style={{float:'right',color:"crimson"}}>Password is required.</p>)}
+     
+
+        <FormLabel color="white">Profile Image</FormLabel>
+        <Input
+          type='file'
+          //value={input.image.name}
+          name ="image"
+          color="white"
+          size='md'
+          focusBorderColor='teal'
+         // errorBorderColor='crimson'
+         // isInvalid ={isError.email && isError.email.match('require')}
+          onChange={handleInputChangeFile}
+        />
+      
+    
+          <Button 
+          variant="solid"
+           type='button'
+            w={"100%"}
+            colorScheme='teal'
+            //variant='outline'
+             mt={10} float="left"
+            onClick ={submit}
+            isLoading={false}
+             >
+            Register
+        </Button>
+        </form>
+      </FormControl>
+    )
+  }
+
+  https://icf.wd5.myworkdayjobs.com/en-US/ICFExternal_Career_Site/viewApplication/2348f1f3db5b9000323ef152f5a50000?clientRequestID=5130239306aa4822a6c543f0527d92cb
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  import { 
+    Box, 
+    Container,
+    VStack,
+    Text,
+    Tabs, 
+    TabList, 
+    TabPanels, 
+    Tab, 
+    TabPanel
+
+} from '@chakra-ui/react'
+import {Login} from './Pages/Login'
+import {Register} from './Pages/Register'
+import {useNavigate as useHistory} from 'react-router-dom'
+import { GetToken } from '../Token/Token'
+import { Chat } from './Chat'
+export const Home  = ()=>{
+ 
+     const   history  = useHistory()
+    const userInfo   = GetToken();
+  
+    
+    const $home  = (   <Container maxW='xl' >
+    <VStack spacing={"5px"}>
+         <Box 
+             d="flex" 
+             justifyContent="center" 
+             p={2} 
+             bg="white" 
+             w="100%" 
+             m="40px 0 15px 0" 
+             borderRadius="1g"
+             borderWidth="1px" 
+              >
+                <Text fontSize={"4xl"} fontFamily="Fira Sans" color={"blackAlpha.700"} >CHAT APP</Text>
+         </Box>
+         <Box
+          w="100%"
+         >
+         <Tabs>
+           <TabList>
+               <Tab w="50%" fontSize="2xl" color={"white"}>Login</Tab>
+               <Tab w="50%" fontSize="2xl" color={"white"}>Register</Tab>
+           </TabList>
+
+           <TabPanels>
+               <TabPanel>
+                 <Login />
+               </TabPanel>
+               <TabPanel>
+                 <Register />
+               </TabPanel>
+               
+           </TabPanels>
+           </Tabs>
+  
+           
+        </Box>
+
+    </VStack>
+
+  </Container>)
+
+  const $chat  = <Chat />;
+
+  let $retun   = userInfo? $chat:$home   
+    
+
+
+    return(
+      $retun
+    )
+}
+
+HTML Formatting Elements
+Formatting elements were designed to display special types of text:
+
+<b> - Bold text
+<strong> - Important text
+<i> - Italic text
+<em> - Emphasized text
+<mark> - Marked text
+<small> - Smaller text
+<del> - Deleted text
+<ins> - Inserted text
+<sub> - Subscript text
+<sup> - Superscript text
+
+HTML Quotation and Citation Elements
+blockquote>,<q>, <abbr>, <address>, <cite>, and <bdo></bdo>
+HTML <bdo> for Bi-Directional Override
+
+HTML Layout Elements
+HTML has several semantic elements that define the different parts of a web page:
+
+HTML5 Semantic Elements	
+<header> - Defines a header for a document or a section
+<nav> - Defines a set of navigation links
+<section> - Defines a section in a document
+<article> - Defines an independent, self-contained content
+<aside> - Defines content aside from the content (like a sidebar)
+<footer> - Defines a footer for a document or a section
+<details> - Defines additional details that the user can open and close on demand
+<summary> - Defines a heading for the <details> element
+
+Semantic Elements in HTML
+
+<article>
+<aside>
+<details>
+<figcaption>
+<figure>
+<footer>
+<header>
+<main>
+<mark>
+<nav>
+<section>
+<summary>
+<time></time>
+
+
+import { AddIcon } from '@chakra-ui/icons'
+import { 
+  
+    Text,
+    Flex,
+    Avatar,
+    Badge,
+    Box,
+    Button,
+    VStack,
+    Stack,
+  
+  
+  } from '@chakra-ui/react'
+
+import { DataStore } from '../../../Context/ChartProvider'
+import {GetToken} from './../../../Token/Token'
+import axios from 'axios'
+import { useToast } from '@chakra-ui/react'
+
+
+
+
+export const MyChat = ()=>{
+
+  const {user,setUser,searchData, setSearchData,selectedChat,setSelectedChat,chats,setChats,alreadyInChat
+   ,userInfo
+  }   = DataStore()
+    
+  const toast  = useToast()
+
+  const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
+    // const id = 'test-toast'
+     
+    // if (!toast.isActive(id)) {
+         toast({
+           title: title,
+           description: message,
+           status: type,
+           duration: time,
+           isClosable: true,
+           position:potision
+         })
+       //} 
+   }
+
+
+
+
+  const getMyChatList = async (url,user_id)=>{
+    const options = {
+        method: 'POST',
+        headers: { 
+        //  'Content-Type': 'application/x-www-form-urlencoded',
+          'Content-Type': 'application/json',
+          'authorization': 'Bearer '+GetToken(),
+         },
+        
+        // body:  {userID:inp},
+         data:  {userID:user_id },
+        url:"/api/chat/"+url,
+      };
+      try {
+          let d  =  await axios(options)
+         let out  = d.data
+           
+           if(out.chats.length>0){
+             const listChat  = [...out.chat] 
+             setUser(listChat)
+             setChats(listChat)
+            
+           }else{
+            
+            setTimeout(()=>{
+              setUser([])   
+            },4000)
+            
+             
+            //  setUser({})
+           }
+         
+      } catch (error) {
+        console.log(error)
+        //if(error.response.status==401){
+          getToast('EXPIRED SESSION','Login again',2000,'top-left')
+        //}
+         
+      }
+     
+    }
+        
+   const goToChatRoom  = (selectedChat)=>{
+      console.log(selectedChat)
+      setSelectedChat(selectedChat)
+   }
+
+    return(
+      
+          <>
+              <Box 
+               display={{base:'none', md:'flex'}}
+               flexDir="column"
+               alignItems={"center"}
+               p={3}
+               bg="white"
+               w={{base:"100%",md:"31%"}}
+               borderRadius="lg"
+               borderWidth={"1px"}
+              >
+                <Box
+                pb={3}
+                px={3}
+                fontSize={{base:"28px",md:"30px"}}
+                fontFamily="work sans"
+                display={"flex"}
+                w="100%"
+                justifyContent={"space-between"}
+                alignItems="center"
+              >
+                  My chart <Text color='#f00' fontSize={"16px"}>{alreadyInChat.is_in?alreadyInChat.info :''}</Text>
+                     <Button
+                       display={"flex"}
+                       fontSize={{base:"17px",md:"10px",lg:"17px"}}
+                       rightIcon={<AddIcon />}
+                      >
+
+                     </Button>
+              </Box>
+              {
+                chats.length>0?<>
+                <VStack w={"100%"}>
+                { chats.map((chat,ind)=>{
+               
+                  console.log(chat, 'CHATS')
+
+               
+                   
+                   return (<>
+                     {
+                      chat.users.forEach(userInChat=>{
+
+                   
+                       ( !chat.isGroup && (userInChat._id != userInfo._id)  ) && 
+                     
+                    (<Box 
+                    onClick={()=>{goToChatRoom(chat)} } 
+                    cursor={"pointer"}
+                    bg  = {selectedChat._id===chat._id ? "#38B2AD":"#E8E8E8"}
+                    color={selectedChat._id===chat._id? "white":"#000"}
+                    px={3}
+                    py={3}
+                    borderRadius={"lg"} 
+                    key= {ind}
+                    display="flex"
+                    width={"100%"}
+                   > 
+                     <Avatar src={"/"+!chat.isGroup&&chat.users[1].profile_img}>
+                       
+                     </Avatar>
+                      <Stack textAlign={"left"} m={"0 2em"}>
+                        <Text>Name : {chat.isGroup?chat.chatName:chat.users[1].fn}</Text> 
+                        <Text>Email : {chat.isGroup?"Chat Group":chat.users[1].email}</Text> 
+                      </Stack>
+                       
+                   </Box> )
+
+                    })
+                }  
+                
+                </>)
+                }) 
+                  }
+              </VStack></>:""
+              }
+              
+
+                
+          </Box>
+             
+             
+          </>
+    )
+}

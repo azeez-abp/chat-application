@@ -1,0 +1,50 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,400;1,100;1,700;1,900&display=swap');
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Fira Sans','Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    'sans-serif';
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+.wrapper{
+  padding: 5px;
+}
+.left, .rigth{
+  background-color: rgba(0, 0, 0, .6);
+  box-sizing: border-box;
+  box-shadow: 0 0 12px #fff;
+  min-height: 100%;
+  border-radius: 4px;
+  
+}
+
+.left{
+  float: left;
+  width: 28%;
+  margin-right: 1px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.rigth{
+  float: right;
+  width: 68%;
+  margin-left: 1px;
+  white-space: nowrap;
+  overflow-x: auto;
+}
+.search{
+  width: 100%;
+  padding: 2px;
+  margin: 0px 0px;
+  height: 42px;
+  border: 4px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 10px;
+
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}

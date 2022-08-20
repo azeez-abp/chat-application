@@ -1,0 +1,77 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Sans:ital,wght@0,100;0,200;0,400;1,100;1,700;1,900&display=swap');
+.App {
+  text-align: center;
+  background-color: black;
+  background-image: url('./back.png');
+  background-size: cover;
+  background-position: center;
+  width: 100%;
+  height: 100vh;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+.action-menue{
+  
+  background-color: rgba(0, 0, 0, .6);
+  position: absolute;
+  /* right: 50%; */
+  box-sizing: border-box;
+  box-shadow: 0 0 24px #fff;
+
+  color: #fff;
+  padding: 10px;
+  right: 38px;
+  z-index: 2;
+  border-radius: 7px;
+  margin-top:50px;
+}
+.action-menue li:hover {
+  background-color: rgba(0, 0, 0, .8);
+}
+
+.action-menue li {
+  width: 100%;
+  padding: 5px;
+  margin-bottom: 3px;
+}
+ 
+.dots{
+ width: "10px";
+ height: "10px";
+ background: "#f00";
+ border-radius:"50%"
+}
+
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
