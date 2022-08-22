@@ -18,10 +18,11 @@ import {
   Text,
   Flex,
   useToast,
-  HStack
+  HStack,
+  useFocusEffect
 
 } from '@chakra-ui/react'
-
+import io from 'socket.io-client';
 
 
 
@@ -43,6 +44,11 @@ export const Chat  =  ()=>{
       setShowActionMenue
       
     }  = DataStore();
+
+    const ioClient  = io('/'/*server io*/)
+
+
+
 
     const getMyChatList = async (url,user_id)=>{
       const options = {
@@ -93,7 +99,11 @@ export const Chat  =  ()=>{
       }
           
    //////////////////////check user  lof=gin/////////////////////////////////////////////
-      
+   
+
+
+
+
     useEffect(()=>{
      hasLoggedIn() 
      if(localStorage.getItem(CHAT_LOGIN_STATUS)=='false'){
@@ -177,9 +187,9 @@ const getData  = async (getChatListCb)=>{
           // bg={"white"}
 
          >
-            {<MyChat/>/*leftside*/} 
+            {<MyChat    />/*leftside*/} 
             <ChartBoard 
-             chatlist={getMyChatList}
+            getMyChatList={getMyChatList}
             
             /> {/*rightside*/}
              

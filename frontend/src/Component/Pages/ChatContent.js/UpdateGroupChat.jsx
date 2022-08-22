@@ -24,10 +24,11 @@ export const UpdateGroupChat  = ({title,style,getToast, chat,makeRequest,resetAc
   const [groupName, setGroupNamef]  = useState('')
   const groupNameValue  = useRef()
   const {user,setUser,searchData, setSearchData,selectedChat,setSelectedChat,chats,setChats,hasError,
-    setHasError ,userInfo,isLoading,setIsLoading,SearchData,showActionMenue,setShowActionMenue
+    setHasError ,userInfo,isLoading,setIsLoading,SearchData,showActionMenue,setShowActionMenue,
+    message,setMessage
     }   = DataStore()
   
-    const { isOpen, onOpen, onClose } = useDisclosure()
+    const { isOpen, onOpen, onClose,isClose } = useDisclosure()
 
 useEffect(()=>{
   setUserSelectedForGroupChat(chat.users)
@@ -99,7 +100,11 @@ getData()
   }
 
 
-  const addToGroup  = (data)=>{
+
+
+
+
+const addToGroup  = (data)=>{
 
     
     if( !selectedUsersIds.includes(data._id) ){ 
@@ -126,6 +131,17 @@ getData()
    
 }
 
+
+const fetchChatsMessages  = async ()=>{
+  setIsLoading(true)
+await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
+if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
+
+if(data.suc) setMessage(data.message) ;setIsLoading(false)
+},'GET' )
+
+}
+
 const  updateGroup  = ()=>{
  
  
@@ -147,25 +163,25 @@ const  updateGroup  = ()=>{
       setIsLoading(true)
 setTimeout(()=>{
 
-  makeRequest('/api/chat/updategroup',data,(err,data)=>{
-
+  makeRequest('/api/chat/updategroup',data,(err,data2)=>{
     if(err){
       setIsLoading(false)
       return getToast('Reqest Error', err.message,'error')
     }
    
-    if(data.suc){
+    if(data2.suc){
+
+      setChats([...data2.chat])
+
       setIsLoading(false)
       getToast('Reqest success', 'update successful' ,'success')
-      makeRequest('/api/chat/chatlist',{},(err,data)=>{
-          if(data.suc){
-            setChats(data.chat)
-          }
-      })
-     
+        setShowActionMenue({...showActionMenue,[data.groupChatId]:false })
+          document.querySelector(".modal--btn--update").click()  
     }
 
 },'PUT')
+
+fetchChatsMessages()
 
 },0)
 
@@ -177,7 +193,8 @@ const openProfilePane =()=>{
   
  setSelectedChat(selectedChat)
  resetActionMenue();
- setTimeout(()=>{onOpen();console.log("UPDATE")},2000)
+
+ //setTimeout(()=>{onOpen();console.log("UPDATE")},2000)
    
 }
 
@@ -238,15 +255,15 @@ const openProfilePane =()=>{
                                             colorScheme='green'
                                             margin={"6px 0 0 6px"} 
                                           >
-                                            <TagLabel>{user.fn}  
+                                            <TagLabel  key={user._id}>{user.fn}  
                                              {
-                                             chat.groupAdmin.map(admin=>admin._id==user._id?"  Admin":"  Member")
+                                             chat.groupAdmin.map(admin=>admin._id==user._id?"  is Admin":"  is Member")
                                         
                                              }
                                             </TagLabel>
                                             {
-                                             chat.groupAdmin.map(admin=>( (admin._id==userInfo._id) )? (<>   <TagCloseButton title='Remove this user' onClick={ ()=>{removeFromGroup(user)} }/>
-                                             </>):(<>{user._id==userInfo._id ?(<> <TagCloseButton title='Exit from the group' onClick={ ()=>{removeFromGroup(user)} }/>
+                                             chat.groupAdmin.map(admin=>( (admin._id==userInfo._id) )? (<>   <TagCloseButton  key={user._id} title='Remove this user' onClick={ ()=>{removeFromGroup(user)} }/>
+                                             </>):(<>{user._id==userInfo._id ?(<> <TagCloseButton  key={user._id} title='Exit from the group' onClick={ ()=>{removeFromGroup(user)} }/>
                                             </>):''  }</>))
                                         
                                              }
@@ -276,16 +293,17 @@ const openProfilePane =()=>{
                        
                          </Box>),
                         'Update Group',
-
+                         ////////////
                           true,
                            updateGroup,
                           'Update group',
+                            null,//  openProfilePane,
+                            ///////////////
                          openProfilePane,
                     
-                         openProfilePane,
-                    
-                         style,
-                       
+                          style,
+                         ////////////
+                         {class3:'modal--btn--update'}
                         )}
      </Box>
     </>

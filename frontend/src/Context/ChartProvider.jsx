@@ -5,10 +5,12 @@ import { useToast } from "@chakra-ui/react";
 import TOKEN_NAME from "../Token/Token";
 import axios  from "axios";
 import { GetToken } from "../Token/Token";
+import io from 'socket.io-client'
 const ChartContext  = createContext()
 
 
 const ChartProvider = ({children})=>{
+
   const toast  = useToast()
 
   ///any state you want to access will be declear here and access in the child
@@ -23,8 +25,8 @@ const ChartProvider = ({children})=>{
     const [hasError,setHasError] =useState({is_in:false,info:''})
     const [isLoading,setIsLoading]  = useState(false)
     const [showActionMenue,setShowActionMenue]  = useState(false)
-    
-
+    const ioClient  = io('/'/*server io*/)
+    const  [messages,setMessages]    = useState ([])
 
 
 
@@ -61,7 +63,9 @@ return (<ChartContext.Provider value={{
   chats,setChats,
   hasError,setHasError,
   isLoading,setIsLoading,
-  showActionMenue,setShowActionMenue
+  showActionMenue,setShowActionMenue,
+  messages,setMessages,
+  ioClient
 
   }}  >
           {children}

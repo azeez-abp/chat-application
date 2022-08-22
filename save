@@ -522,3 +522,5 @@ export const MyChat = ()=>{
           </>
     )
 }
+
+npm install --save react-scrollable-feed --legacy-peer-deps

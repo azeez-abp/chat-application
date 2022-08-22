@@ -51,6 +51,8 @@ export const MyChat = ()=>{
   const { isOpen, onOpen, onClose } = useDisclosure()
   const toast  = useToast()
   const history = useNavigate()
+
+
   const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
     // const id = 'test-toast'
      
@@ -241,8 +243,12 @@ const handleGroupNameInputChange = (ev)=>{
  
 
    const goToChatRoom  = (selectedChat)=>{
-    console.log(selectedChat)
+    console.log(showActionMenue)
+     setIsLoading(true)
     setSelectedChat([selectedChat])
+    setTimeout(()=>{setIsLoading(false);setShowActionMenue({...showActionMenue,[selectedChat._id]:false})},2000
+
+    )
   
  }
 
@@ -310,6 +316,7 @@ const deleteChat  = chat=>{
                pos="relative"
 
               >
+                {/* left uperper */}
                 <Box
                 pb={3}
                 px={3}
@@ -320,19 +327,17 @@ const deleteChat  = chat=>{
                 justifyContent={"space-between"}
                 alignItems="center"
               >
-                  My chart <Button type='button' bg={"transparent"} isLoading={isLoading} color='#f00' fontSize={"16px"}>{hasError.is_in?hasError.info :''}
-                  </Button>
+                  My chart 
+                 <Button type='button' bg={"transparent"} isLoading={isLoading} color='#f00' fontSize={"16px"}>{hasError.is_in?hasError.info :''}
+             </Button>
                   
                     
                     
-                    
-                    
-                    
-                     <Text
+                   <Text
                        display={"flex"}
                        fontSize={{base:"17px",md:"10px",lg:"17px"}}
                        
-                      
+                      // add button container
                       >
                        
                         {
@@ -359,7 +364,9 @@ const deleteChat  = chat=>{
                       {searchData.length>0? searchData.map((user,ind)=>
                         {  
                           if(user._id != userInfo._id){
-                          return (<UserList
+                          return (
+                         /*The tag for list of  searched user */   
+                        <UserList
                           key  ={user.userId} 
                           user = {user}
                           bg  = { ( hasNotBeenSeleted.hasOwnProperty(user._id)&& hasNotBeenSeleted[user._id]==false)?'#097969':'#E8E8E8'}
@@ -395,18 +402,25 @@ const deleteChat  = chat=>{
 
 
               </Box>
+   {/* left uperper */}
+
+
+
+     
               {
                 chats.length>0?<>
+                {/* List of chat */}
                 <VStack w={"100%"}>
-                { chats.map((chat,ind)=>{
-                    console.log(showActionMenue[chat._id],' saxcsdcdcd')
+                { (chats.length>0) && chats.map((chat,ind)=>{
+                    console.log(chat.users,' saxcsdcdcd')
                           
                       //console.log(chat, "wretryuiuoj")
-                   return (<>
+                   return (
+                   <>
                      {
-                      // ( !chat.isGroupChat && (chat.users[0]._id != userInfo._id) ) &&
+                  
                      
-                    (<Box 
+                   (chat.users.length>1) &&  (<Box 
                       
                     cursor={"pointer"}
                     bg  = {(selectedChat.length>0 && selectedChat[0]._id===chat._id) ? "#38B2AD":"#E8E8E8"}
@@ -417,16 +431,17 @@ const deleteChat  = chat=>{
                     key= {ind}
                     display="flex"
                     width={"100%"}
-                    onMouseDown = {leftClickMenuShow}
+                   // onMouseDown = {leftClickMenuShow}
                    > 
                    <Box  
                     display={"flex"}
                    onClick={()=>{goToChatRoom(chat)} } 
                    
                    >
+                    {console.log(chat)}
                      <Avatar 
-                     name={!chat.isGroupChat?chat.users[1].fn:chat.chatName}
-                     src={!chat.isGroupChat?"/"+chat.users[1].profile_img:chat.chatName}
+                     name={ (chat.isGroupChat)?chat.chatName:chat.users[0]._id === userInfo._id?chat.users[1].fn:chat.users[0].fn}
+                     src={ (chat.isGroupChat)?chat.chatName:chat.users[0]._id === userInfo._id?chat.users[1].profile_img:chat.users[0].profile_img}
                      >
                        
                      </Avatar>
@@ -434,12 +449,12 @@ const deleteChat  = chat=>{
                       
                       >
 
-                      <Text>Name : {chat.isGroupChat?chat.chatName:chat.users[1].fn}</Text> 
+                      <Text>Name : {(chat.isGroupChat)?chat.chatName:chat.users[0]._id === userInfo._id?chat.users[1].fn:chat.users[0].fn}</Text> 
                        
                         
                         {/* <Text>Name : {chat.isGroup?chat.chatName:chat.users[0]._id== userInfo._id?userInfo.fn:chat.users[1].fn}</Text> 
                         */}
-                        <Text> {chat.isGroupChat?"Chat Group":"Email :"+ chat.users[1].email}</Text> 
+                        <Text> {chat.isGroupChat?"Chat Group":"Email :"+  (chat.users[0]._id === userInfo._id?chat.users[1].email:chat.users[0].email ) }</Text> 
 
                       </Stack>
                      </Box> 
@@ -497,7 +512,8 @@ const deleteChat  = chat=>{
                                        notifier={getToast}> 
                                        </DeleteChat>
                                     </ListItem >
-                                     {chat.isGroupChat?<ListItem>
+                                     {chat.isGroupChat?
+                                     <ListItem>
                                       <UpdateGroupChat 
                                         style={{
                                           background:"transparent",

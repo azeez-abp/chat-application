@@ -14,10 +14,12 @@ function SelectedChatProfile({img,name,email,title,style}) {
 
 const openProfilePane  = ()=>{
     
-        console.log(selectedChat," IS SELECTED")
+   console.log(selectedChat," IS SELECTED")
     
     onOpen()
 }
+
+
   return (
     <>
    
@@ -25,6 +27,7 @@ const openProfilePane  = ()=>{
        w={"30px"}
        h={"30px"}
        float={"right"}
+       margin={"-1px 10px 10px 10px;"}
      
      >
       {        Modals(
@@ -53,6 +56,7 @@ const openProfilePane  = ()=>{
 
                          null,
                          style
+
 
 
 

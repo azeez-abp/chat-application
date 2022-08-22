@@ -2,6 +2,11 @@ import { Box } from '@chakra-ui/react'
 import React,{useState} from 'react'
 import SingleChat from './SingleChat'
 import { DataStore } from '../../../Context/ChartProvider'
+
+
+
+
+
 export default function ChartBoard({getMyChatList}) {
   const {selectedChat,userInfo} = DataStore()
   const [c,sc]  = useState({})

@@ -28,7 +28,8 @@ import {
     closeAction=null,
 ///////////////////////////
     openAction  = null,
-    styles = null
+    styles = null,
+     elementClass={}
 
      )=> {
 
@@ -39,11 +40,11 @@ import {
 
     return (
       <> 
-       <Element style={styles?styles:{}} as={Button} _hover={{bg:"rgba(22,22,22,.4)"}} onClick={onOpen}>
+       <Element  className = {elementClass.class1?elementClass.class1:"modal--btn"} style={styles?styles:{}} as={Button} _hover={{bg:"rgba(22,22,22,.4)"}} onClick={onOpen}>
           {typeof Child==='string'?Child:<Child />}
       </Element>
   
-        <Modal isOpen={isOpen} onClose={onClose} onOpen ={openAction?openAction: null}>
+        <Modal  className = {elementClass.class2?elementClass.class2:"modal--btn2"} isOpen={isOpen} onClose={onClose} onOpen ={openAction?openAction: null}>
           <ModalOverlay      bg='blackAlpha.300'backdropFilter='blur(10px) hue-rotate(90deg)' ></ModalOverlay>
           <ModalContent>
             <ModalHeader>{title}</ModalHeader>
@@ -54,7 +55,7 @@ import {
           {showFooter && (
             <ModalFooter>
              <>
-               <Button colorScheme='ghost' bg={"#000"} mr={3} onClick={closeAction?closeAction: onClose}>Close</Button>
+               <Button  className = {elementClass.class3?elementClass.class3:"modal--btn3"} colorScheme='ghost' bg={"#000"} mr={3} onClick={closeAction?closeAction: onClose}>Close</Button>
                 {submitEvent &&  <Button variant='ghost' isLoading={isLoading} onClick={submitEvent} > { submitButtonTextValue? submitButtonTextValue:" Seconadry  Action"}</Button>}
              
               </>

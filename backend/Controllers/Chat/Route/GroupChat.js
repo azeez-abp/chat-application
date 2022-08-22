@@ -39,9 +39,12 @@ const Chat  = require('./../../../db/Mongo/Mongo').getModel('chats')
 
 
  let UpdateGroupName = (router)=>{
+       
         let auth  = require('../../../Middleware/JWTAuth')
         const Chat  = require('./../../../db/Mongo/Mongo').getModel('chats')
-            router.put('/api/chat/updategroup',auth, asyncHandler(async (req,res)=>{      
+        const User  = require('./../../../db/Mongo/Mongo').getModel('users')
+            router.put('/api/chat/updategroup',auth, asyncHandler(async (req,res)=>{   
+                let authUser = req.chatUserId   
                 if(req.cookies.session_expires) return res.sendStatus(401)
                  console.log(req.body.groupChatName)
                 if(!req.body.groupChatId || !req.body.groupChatName)  return res.json({err:[" All are required"]})    
@@ -62,7 +65,29 @@ const Chat  = require('./../../../db/Mongo/Mongo').getModel('chats')
                         res.status(400).json({err:'update failed'});
                         throw new Error(error.message)
                     }else{
-                       return res.status(200).json({UpdateGroupChatName,suc:'done'});
+
+                        Chat.find({  users:{$elemMatch :{ $eq:authUser} } }) 
+                        .populate('users','-pa')
+                        .populate('groupAdmin','-pa')
+                        .populate('latestMessage')
+                      //  .sort('updateAt',-1)
+
+                        .then( async(results)=>{
+                        
+                           let results_get_users  = User.populate(results,{
+                               path:'latestMessage.sender',
+                               select:"fn email profile_img"
+                            }).then(user=>{
+                              
+                            }).catch(err=>{
+                              
+                            })
+                      let data  = {chat:results, suc:'get'}
+                        
+                       return res.status(200).json(data);
+                        })
+                    
+                     
                     }
                     
                 } catch (error) {

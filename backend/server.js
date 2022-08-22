@@ -13,13 +13,16 @@ var whitelist = [
 'http://example1.com', 
 'http://example2.com', 
 'http://127.0.0.1:7000',
+'http://127.0.0.1:3000',
 '127.0.0.1:7000',
-'localhost:7000'
-//undefined
+'localhost:7000',
+'localhost:3000',
+'undefined'
 ]
+
 var corsOptions = {
   origin: function (origin, callback) {
-    
+        
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
@@ -31,8 +34,8 @@ var corsOptions = {
 
 corsOptionsDelegate = function (req, callback) {
   var corsOptions;
- // console.log(req.headers['host'],"tyu")
-  if (whitelist.indexOf(req.header('host')) !== -1) {
+  console.log(req.headers['host'],"tyu")
+  if (whitelist.indexOf(req.headers['host'] ) !== -1) {
     //corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
   } else {
     throw new Error("Rejection by cors")
@@ -78,12 +81,39 @@ app.get('/*',(req,res)=>{
 
 ///https://app.programiz.pro/course/learn-python-basics/get-started?page=1
 
+// app.post('/socket.io/:id',()=>{
+//   console.log("SOCKET")
+// })
 
-app.listen(PORT,()=>{
-    console.log(`127.0.0.1:${PORT}`, );
+
+// app.get('/socket.io/:id',()=>{
+//   console.log("SOCKET")
+// })
+const httpServer   = app.listen(PORT,()=>{
+    console.log(`http://127.0.0.1:${PORT}`, );
 
 
 })
+
+const io  =  require('socket.io')(httpServer,{
+  pingTimout:60000,
+  cors:{
+    origin:"http://127.0.0.1:3000",
+    methods: ["GET", "POST"]
+  }
+});
+
+io.on("connection",(socket)=>{
+  console.log("IO connection")
+
+  socket.emit('hankshake',{id:socket.id})
+
+
+})
+
+
+
+//io.listen(PORT+1)
 
 //alt z wrap text in vitual studeo code
 //https://www.1377x.to/search/learn%20python%20programming%20masterclass/1/

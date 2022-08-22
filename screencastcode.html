@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title></title>
+</head>
+<body>
+<button id="start-camera">Start Camera</button>
+<video id="video" width="320" height="240" autoplay></video>
+<button id="start-record">Start Recording</button>
+<button id="stop-record">Stop Recording</button>
+<button id="mute-record">Mute Record</button>
+
+<button id="present-screen">Present screen</button>
+<button id="stop-present-screen">stop Present screen</button>
+
+<a id="download-video" download="test.webm">Download Video</a>
+<span id="log"></span>
+</body>
+</html>
+<script type="text/javascript">
+	let camera_button = document.querySelector("#start-camera");
+let video = document.querySelector("#video");
+let start_button = document.querySelector("#start-record");
+let stop_button = document.querySelector("#stop-record");
+let download_link = document.querySelector("#download-video");
+let mute_record = document.querySelector("#mute-record");
+let startElem = document.querySelector("#present-screen");
+let stopElem = document.querySelector("#stop-present-screen");
+let logElem  = document.querySelector("#log");
+
+let camera_stream = null;
+let media_recorder = null;
+let blobs_recorded = [];
+let displayMediaOptions  = { video: true, audio: {
+   		 echoCancellation: true,
+    noiseSuppression: true,
+    sampleRate: 44100
+   	} }
+camera_button.addEventListener('click', async function() {
+   	camera_stream = await navigator.mediaDevices.getUserMedia(displayMediaOptions);
+	video.srcObject = camera_stream;
+
+	    castScreen();
+    console.log("STARTED")
+});
+
+start_button.addEventListener('click', function() {
+    // set MIME type of recording as video/webm
+    media_recorder = new MediaRecorder(camera_stream, { mimeType: 'video/webm' });
+
+    // event : new recorded video blob available 
+    media_recorder.addEventListener('dataavailable', function(e) {
+		blobs_recorded.push(e.data);
+		logElem.innerHTML = "Recording start"
+    });
+
+    // event : recording stopped & all blobs sent
+    media_recorder.addEventListener('stop', function() {
+    	// create local object URL from the recorded video blobs
+    	let video_local = URL.createObjectURL(new Blob(blobs_recorded, { type: 'video/mp4' }));
+    	download_link.href = video_local;
+
+    });
+
+    // start recording with each recorded blob having 1 second video
+    media_recorder.start(1000);
+
+
+});
+
+stop_button.addEventListener('click', function() {
+	media_recorder.stop(); 
+	logElem.innerHTML = "Recording stop"
+
+});
+
+mute_record.addEventListener('click', function() {
+	 let mute  = false
+	 if(video.muted){
+	 	video.muted = false
+	 	logElem.innerHTML = "Voice active"
+
+	 }else{
+	 	video.muted = true
+	 	logElem.innerHTML = "Voice stop"
+	 }
+
+
+   
+
+
+
+
+});
+
+
+function castScreen(){
+	////////////////////////////////////////////////////////////////////////////////
+
+function dumpOptionsInfo() {
+  const videoTrack = video.srcObject.getVideoTracks()[0];
+   
+  console.info("Track settings:");
+  console.info(JSON.stringify(videoTrack.getSettings(), null, 2));
+  console.info("Track constraints:");
+  console.info(JSON.stringify(videoTrack.getConstraints(), null, 2));
+}
+
+async function startCapture() {
+  logElem.innerHTML = "";
+
+  try {
+    camera_stream = await navigator.mediaDevices.getDisplayMedia(displayMediaOptions);
+    video.srcObject   = camera_stream;
+    dumpOptionsInfo();
+  } catch (err) {
+    console.error(`Error: ${err}`);
+  }
+}
+
+
+function stopCapture(evt) {
+  let tracks = video.srcObject.getTracks();
+
+  tracks.forEach((track) => track.stop());
+  video.srcObject = null;
+}
+
+startElem.addEventListener("click", (evt) => {
+	console.log("Start")
+  startCapture();
+}, false);
+
+stopElem.addEventListener("click", (evt) => {
+	console.log("stop")
+  stopCapture();
+}, false);
+
+}
+
+</script>
