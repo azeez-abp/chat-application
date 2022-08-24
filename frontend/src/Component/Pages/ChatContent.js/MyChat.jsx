@@ -139,7 +139,7 @@ export const MyChat = ()=>{
 
 
 //  const openProfilePane =()=>{
-//     console.log("AWARE")
+
 //    setSelectedChat(selectedChat)
 //    setTimeout(()=>{onOpen()},2000)
      
@@ -170,7 +170,7 @@ const handleGroupNameInputChange = (ev)=>{
        
          if(out.users.length>0){
            const userSearch =out.users 
-           console.log([userSearch]);
+
            setSearchData(userSearch)
           // setSearchItemLoading(true)
        
@@ -193,7 +193,7 @@ const handleGroupNameInputChange = (ev)=>{
           }
         }
       },5200)
-      //console.log(error)
+
     }
    
  }
@@ -206,7 +206,7 @@ const handleGroupNameInputChange = (ev)=>{
 
    const   submitAddGroup  = ()=>{
     setIsLoading(true)
-      console.log(userSelectedForGroupChat)
+
       if(userSelectedForGroupChat.length < 1){
         setIsLoading(false)
        return  getToast('Validation Error','Select user to add to group','error',5000,'top')
@@ -233,7 +233,7 @@ const handleGroupNameInputChange = (ev)=>{
 
 
           
-             console.log(data)             
+
       })
 
 
@@ -243,7 +243,7 @@ const handleGroupNameInputChange = (ev)=>{
  
 
    const goToChatRoom  = (selectedChat)=>{
-    console.log(showActionMenue)
+
      setIsLoading(true)
     setSelectedChat([selectedChat])
     setTimeout(()=>{setIsLoading(false);setShowActionMenue({...showActionMenue,[selectedChat._id]:false})},2000
@@ -266,7 +266,7 @@ const getCoordinate  = event=>{
      
   //  let ev = {...event.target.getBoundingClientRect(),...event}
   //  setCoor(ev)
-  console.log(event.target.getAttribute('chatid'),"rwetsst","ID",event.target)
+
     
     let menueIds    = {}
 
@@ -282,12 +282,12 @@ const getCoordinate  = event=>{
 
   //setChats(chats)
    
-  console.log(event,showActionMenue,showActionMenue[event],"rwetsst")
+
 }
  
 
 const  leftClickMenuShow  = e=>{
-  console.log(e, 'is e')
+
 }
 
 const deleteChat  = chat=>{
@@ -412,9 +412,9 @@ const deleteChat  = chat=>{
                 {/* List of chat */}
                 <VStack w={"100%"}>
                 { (chats.length>0) && chats.map((chat,ind)=>{
-                    console.log(chat.users,' saxcsdcdcd')
+
                           
-                      //console.log(chat, "wretryuiuoj")
+
                    return (
                    <>
                      {
@@ -438,7 +438,7 @@ const deleteChat  = chat=>{
                    onClick={()=>{goToChatRoom(chat)} } 
                    
                    >
-                    {console.log(chat)}
+
                      <Avatar 
                      name={ (chat.isGroupChat)?chat.chatName:chat.users[0]._id === userInfo._id?chat.users[1].fn:chat.users[0].fn}
                      src={ (chat.isGroupChat)?chat.chatName:chat.users[0]._id === userInfo._id?chat.users[1].profile_img:chat.users[0].profile_img}

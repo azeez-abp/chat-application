@@ -91,4 +91,31 @@
                     </tr>
                 </tbody>
             </table>
+    /https://developer.mozilla.org/en-US/docs/Web/API
+
+
+
     
+//  const httpServers  = app.listen(PORT,()=>{
+    //   console.log(`127.0.0.1:${PORT}`, );
+    // })
+    // createServer({
+    //   key: readFileSync("/path/to/server-key.pem"),
+    //   cert: readFileSync("/path/to/server-cert.pem"),
+    //   requestCert: true,
+    //   ca: [
+    //     readFileSync("/path/to/client-cert.pem")
+    //   ]
+    // })
+    
+    const { createServer } = require("http");
+    const httpServer = createServer(app);
+    const { Server } = require("socket.io");
+    const io  = new Server(httpServer , {})
+    
+    io.on('connect',()=>{console.log("CONNECTED")})
+    
+    
+    httpServer.listen(PORT,()=>{
+      console.log(`CONNECTED @ 127.0.0.1:${PORT}`)
+    });

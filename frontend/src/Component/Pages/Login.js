@@ -1,8 +1,7 @@
-import { useEffect, useState } from 'react'
+import {useState } from 'react'
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { Chat } from '../Chat';
-import { GetToastSettings } from '../Toast';
+
 import {
     FormControl,
     FormLabel,
@@ -13,19 +12,12 @@ import {
     InputGroup,
     InputRightElement,
     useToast,
-    position,
   } from '@chakra-ui/react'
 
-import TOKEN_NAME, { GetToken, SaveToken,CHAT_LOGIN_STATUS } from '../../Token/Token';  
-
-
-
-
+import  { SaveToken,CHAT_LOGIN_STATUS } from '../../Token/Token';  
 
 
 export const Login = (props)=> {   
-   
-     
     const history   = useNavigate()
     const [input, setInput] = useState({email:"",password:""})///if you dont indicate the 
     //field it will give error
@@ -33,6 +25,8 @@ export const Login = (props)=> {
    const [show, setShow]  = useState(false);
    const [isLoading, setLoading] = useState(false)
    const [hasLogin, setHasLogin]  = useState(false);
+
+
    const toast = useToast()
    const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
         toast(  {

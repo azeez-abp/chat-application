@@ -7,7 +7,7 @@ import { isSameSender,isLastMessage } from '../../SomeFunctions'
 
 function MessageBody({messages}) {
     const {userInfo}  = DataStore()
-    //console.log(messages, 'MESSGE')
+
   return (
     <ScrollableFeed  forceScroll={true} style={{maxHeght:"90vh"}}> 
          <div 

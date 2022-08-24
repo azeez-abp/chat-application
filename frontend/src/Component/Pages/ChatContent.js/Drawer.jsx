@@ -47,7 +47,7 @@ const   history    =useNavigate()
    const [notFound,setNotFound]  = useState('')
   
    useEffect(()=>{
-     console.log("CHTA")
+
    },[chats]) 
 
  const getData  = async (inp,setSearchItemLoadingCb,setNotFoundcb)=>{
@@ -175,12 +175,12 @@ const   history    =useNavigate()
       try {
           let d  =  await axios(options)
          let out  = d.data
-          console.log(out, "OOOOO")
+
            
            if(out.chat.length>0){
              const listChat  = [...out.chat] 
              setChats(listChat)
-             console.log(chats, 'second get')
+
             
            }else{
             
@@ -222,7 +222,7 @@ const   history    =useNavigate()
           let d  =  await axios(options)
          let out  = d.data
            
-         console.log(url,user_id,'UUUUUUUUUUU',out.chat)
+
            if(out.chat.hasOwnProperty('_id')){
 
              const listChat  = [...chats,out.chat] 
@@ -235,7 +235,7 @@ const   history    =useNavigate()
            }
          
       } catch (error) {
-       console.log(error)
+
         //if(error.response.status==401){
          // getToast('EXPIRED SESSION','Login again',2000,'top-left')
         //}

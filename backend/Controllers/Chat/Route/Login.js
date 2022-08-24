@@ -42,7 +42,7 @@ let Login = (router)=>{
            let access_token =await jwt.sign( 
               {user : userDetails.userId,id:userDetails._id},
                keys.ACCESS_TOKEN, /*save in memory Not file or database*/
-              { expiresIn:   '120m' },
+              { expiresIn:   '1d' },
                
               ); 
              

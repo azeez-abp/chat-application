@@ -36,8 +36,7 @@ import {
  
       const { isOpen, onOpen, onClose } = useDisclosure()
       const  {isLoading}   = DataStore()
-      console.log(openAction, 'OPEN ACTION')
-
+     
     return (
       <> 
        <Element  className = {elementClass.class1?elementClass.class1:"modal--btn"} style={styles?styles:{}} as={Button} _hover={{bg:"rgba(22,22,22,.4)"}} onClick={onOpen}>

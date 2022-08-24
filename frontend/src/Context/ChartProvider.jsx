@@ -1,11 +1,6 @@
-import { useState, useContext, createContext,useEffect} from "react";
-import {useNavigate as useHistory} from 'react-router-dom'
-import { HasLoggedIn } from "../Component/HasLoggedIn";
+import { useState, useContext, createContext} from "react";
 import { useToast } from "@chakra-ui/react";
-import TOKEN_NAME from "../Token/Token";
-import axios  from "axios";
-import { GetToken } from "../Token/Token";
-import io from 'socket.io-client'
+
 const ChartContext  = createContext()
 
 
@@ -25,10 +20,9 @@ const ChartProvider = ({children})=>{
     const [hasError,setHasError] =useState({is_in:false,info:''})
     const [isLoading,setIsLoading]  = useState(false)
     const [showActionMenue,setShowActionMenue]  = useState(false)
-    const ioClient  = io('/'/*server io*/)
     const  [messages,setMessages]    = useState ([])
-
-
+    const [typeValue,setTypeValue]  = useState('')
+       //const ioClient  = io('/'/*server io*/)
 
 
     const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
@@ -65,7 +59,8 @@ return (<ChartContext.Provider value={{
   isLoading,setIsLoading,
   showActionMenue,setShowActionMenue,
   messages,setMessages,
-  ioClient
+  getToast,
+  typeValue,setTypeValue,
 
   }}  >
           {children}

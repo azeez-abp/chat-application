@@ -13,16 +13,14 @@ var whitelist = [
 'http://example1.com', 
 'http://example2.com', 
 'http://127.0.0.1:7000',
-'http://127.0.0.1:3000',
 '127.0.0.1:7000',
+'http://localhost:3000',
 'localhost:7000',
-'localhost:3000',
 'undefined'
 ]
-
 var corsOptions = {
   origin: function (origin, callback) {
-        
+    
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
@@ -34,8 +32,8 @@ var corsOptions = {
 
 corsOptionsDelegate = function (req, callback) {
   var corsOptions;
-  console.log(req.headers['host'],"tyu")
-  if (whitelist.indexOf(req.headers['host'] ) !== -1) {
+ // console.log(req.headers['host'],"tyu")
+  if (whitelist.indexOf(req.header('host')) !== -1) {
     //corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
   } else {
     throw new Error("Rejection by cors")
@@ -69,52 +67,32 @@ app.use((req,res,next)=>{
 //require('./Controllers/Student/Route')(app) 
 //app.use('/chat')
 require('./Controllers/Chat/Route')(app)
-require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',true,true,{w:40,h:40},false,{s:2000,w:3000,h:200});
+
+// app.get('/soclet.io/:id',(req,res)=>{
+//   console.log("IO GET REQUESTY")
+// })
+
+// app.post('/soclet.io/:id',(req,res)=>{
+//   console.log("IO POST REQUESTY")
+// })
+//require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',true,true,{w:40,h:40},false,{s:2000,w:3000,h:200});
 //require('./Lib/Mailer')('adioadzeez@gmail.com',['adioadey@yahoo.com','adioadeyz@gmail.com'],'Testing node amile',`<h1>Hello AZ</h1>`)
 app.get('/*',(req,res)=>{
     res.send(`<h1>404 File not file</h1>`)
 })
+
+//require('./Controllers/Chat/io').io1(5200)
+
+require('./Controllers/Chat/io').ioexpress(app).listen(PORT,()=>{
+  console.log(`CONNECTED @ 127.0.0.1:${PORT}`)
+});
+
 
 
 ///https://cssbattle.dev/play/78 css battle
 ///icf job https://icf.wd5.myworkdayjobs.com/en-US/ICFExternal_Career_Site/userHome
 
 ///https://app.programiz.pro/course/learn-python-basics/get-started?page=1
-
-// app.post('/socket.io/:id',()=>{
-//   console.log("SOCKET")
-// })
-
-
-// app.get('/socket.io/:id',()=>{
-//   console.log("SOCKET")
-// })
-const httpServer   = app.listen(PORT,()=>{
-    console.log(`http://127.0.0.1:${PORT}`, );
-
-
-})
-
-const io  =  require('socket.io')(httpServer,{
-  pingTimout:60000,
-  cors:{
-    origin:"http://127.0.0.1:3000",
-    methods: ["GET", "POST"]
-  }
-});
-
-io.on("connection",(socket)=>{
-  console.log("IO connection")
-
-  socket.emit('hankshake',{id:socket.id})
-
-
-})
-
-
-
-//io.listen(PORT+1)
-
 //alt z wrap text in vitual studeo code
 //https://www.1377x.to/search/learn%20python%20programming%20masterclass/1/
 

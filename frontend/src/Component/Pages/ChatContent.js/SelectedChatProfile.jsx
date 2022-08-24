@@ -14,7 +14,7 @@ function SelectedChatProfile({img,name,email,title,style}) {
 
 const openProfilePane  = ()=>{
     
-   console.log(selectedChat," IS SELECTED")
+
     
     onOpen()
 }

@@ -19,15 +19,16 @@ import { useNavigate  } from 'react-router-dom'
 import { GetToken } from '../../../Token/Token'
 import axios from 'axios'
 import MessageBody from './MessageBody'
-
-
-
+import {io} from 'socket.io-client'
 
 export default function SingleChat({getMyChatList}) {
     const [viewSelectedChatProfile,setViewSelectedChatProfile]    =useState(false)
 
      
     const  [newMessage,setNewMessage]    = useState ('')
+    const  [hasConnected,setHasConnected]    = useState (false)
+    const  [typingIn,setTypingIn]    = useState (false)
+    let  [enterCount,setEnterCount]  = useState(0)
     const history = useNavigate()
     const toast  = useToast()
     const {  
@@ -35,9 +36,68 @@ export default function SingleChat({getMyChatList}) {
         isLoading,setIsLoading,
         messages,setMessages,
         userInfo,
-        ioClient
+        getToast,
+        typeValue,setTypeValue
 
     } = DataStore()
+
+    const socket  = io('http://localhost:7000')
+
+    useEffect(
+  
+      ///////////////////
+      ()=>{
+
+    
+   
+    ///////////////////////////////////////////
+ if(selectedChat.length>0){
+    socket.on('connect',()=>{
+      //////////////////////////////everything in s
+     setHasConnected(true)
+     console.log(selectedChat," se")
+      selectedChat.length>0 && socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
+
+    })
+   // selectedChat.length>0 &&  socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
+    /////////////////////////////////////////////
+    socket.on('connected',(data)=>{
+    //(data !=='' || data !=='null') && getToast('CONNETION MESSAGE',`${data.fn} has joined`,'success') 
+  //getToast('CONNETION MESSAGE','You join room'+data,'success')
+   }) 
+   ///////////////////////////////////////////////////////////
+   socket.on('user-enter',(user_)=>{
+    if(user_._id !=userInfo._id && enterCount===0){
+        setTypeValue(`${user_.fn} just enter the room `)
+        enterCount  = enterCount+1
+       setEnterCount(enterCount)
+    }
+   })
+
+   if(typingIn){
+    console.log("IS TYPING 1", enterCount)
+     socket.emit('is-typing', userInfo);
+   }
+
+   socket.on('is-typing-in',(user_)=>{
+    console.log("IS TYPING 2", enterCount,user_.fn)
+     if(user_._id !== userInfo._id){
+       console.log("RECEIVE TYPING")
+        setTypeValue(`${user_.fn} is typing...`)
+        setTimeout(()=>{setTypeValue(``)},3000)
+     }
+   })
+   console.log(typeValue," valu")
+    //socket.emit('setup',{...userInfo,room_id:socket.id})
+    //socket.on('typin')
+    
+    
+    
+    ///////////////////
+      //  getToast('Message Sending Error','doen','success',4000,'top')
+           } //if end
+    },[selectedChat,typingIn])  
+    
 
 
     const makeRequest = async (url,data,cb,mtd=null)=>{
@@ -80,6 +140,16 @@ export default function SingleChat({getMyChatList}) {
       }
           
    
+  useEffect(()=>{
+    socket.on('has-send-message',(num,id,messages_)=>{
+      console.log(id, messages_, "BY IOs")
+       if(id!==userInfo._id){
+        setMessages(messages_)
+       }
+    })     
+ 
+   },[messages])
+
 
 
 const removeSelectedChat  = ()=>{
@@ -89,51 +159,30 @@ const removeSelectedChat  = ()=>{
 }
 
 
-const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
-  // const id = 'test-toast'
-   
-  // if (!toast.isActive(id)) {
-       toast({
-         title: title,
-         description: message,
-         status: type,
-         duration: time,
-         isClosable: true,
-         position:potision
-       })
-     //} 
- }
-
 
 const typing  = (e)=>{
+ 
   setNewMessage(e.target.value)
 }
 
 
 const fetchChatsMessages  = async ()=>{
-  console.log(selectedChat,"SELECTED CHAT")
-      setIsLoading(true)
-      selectedChat.length>0 && /*setIsLoading(true);*/ await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
-    if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
-    
-    if(data.suc) setMessages(data.message) ;setIsLoading(false)
-},'GET' )
 
+     if(  selectedChat.length>0) {
+        setIsLoading(true)
+         await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
+            if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
+            
+            if(data.suc) setMessages(data.message) ;setIsLoading(false)
+        },'GET' )
+
+     } 
+     
+    
 }
 
-useEffect(()=>{
 
-  ioClient.on("connection", (socket) => {
-    console.log(socket.id,"wqedefwe"); // x8WIv7-mJelg7on_ALbx
 
-   socket. on('hankshake',(e)=>{
-      console.log("HAVING",e)
-    })
-  });
-
- 
-
-},[])   
 useEffect(()=>{
 fetchChatsMessages()
 },[selectedChat])
@@ -145,9 +194,24 @@ const sendMessage  = (e)=>{
          makeRequest('/api/chatline/sendmessage',{content:newMessage,chatId:selectedChat[0]._id},(err, data)=>{
             if(err) return getToast('Message Sending Error',err.message,'error',4000,'top')
             
-            if(data.suc) setMessages([...messages,data.message])
+            if(data.suc){ 
+            //   setMessages([...messages,data.message])
+                socket.emit("new-messaga-send",1,userInfo._id,[...messages,data.message])
+            };
       } )
   }
+}
+
+const userIsTyping  = ()=>{
+
+  setTypingIn(true)
+
+}
+
+const userStopTyping  = ()=>{
+
+  setTimeout(()=>{ setTypingIn(false)},6000)
+ 
 }
 
   return (
@@ -211,7 +275,9 @@ const sendMessage  = (e)=>{
             </Text>
 
 
-            <Box>{selectedChat[0].isGroupChat?selectedChat[0].chatName: (selectedChat[0].users[1]._id===userInfo._id) ? selectedChat[0].users[0].fn:selectedChat[0].users[1].fn   } </Box>
+            <Box>{selectedChat[0].isGroupChat?selectedChat[0].chatName: (selectedChat[0].users[1]._id===userInfo._id) ? selectedChat[0].users[0].fn:selectedChat[0].users[1].fn   } 
+               <Text>{typeValue} </Text>
+            </Box>
 
    
 
@@ -282,6 +348,8 @@ const sendMessage  = (e)=>{
             color={"#fff"}
             fontWeight={600}
             border={"none"}
+            onKeyDown = {userIsTyping}
+            onKeyUp  = {userStopTyping}
           
             />
             {/* <InputRightAddon children='.com' /> */}
@@ -294,7 +362,7 @@ const sendMessage  = (e)=>{
              borderLeft={"2px solid #e3e3e3"}
            
           
-            children={ <svg color="inherit" viewBox="0 0 32 32" aria-hidden="true" class="e5ibypu0 lc-di14ft"><path d="M6.4,5.6l21,9.5c0.5,0.2,0.7,0.8,0.5,1.3c-0.1,0.2-0.3,0.4-0.5,0.5l-21,9.5  c-0.5,0.2-1.1,0-1.3-0.5c-0.1-0.3-0.1-0.6,0-0.8L8.6,18L20.5,16L8.6,14.1L5.1,6.9c-0.2-0.5,0-1.1,0.5-1.3C5.8,5.5,6.1,5.5,6.4,5.6z"></path></svg>}
+            children={ <svg color="white" viewBox="0 0 32 32" aria-hidden="true" class="e5ibypu0 lc-di14ft"><path d="M6.4,5.6l21,9.5c0.5,0.2,0.7,0.8,0.5,1.3c-0.1,0.2-0.3,0.4-0.5,0.5l-21,9.5  c-0.5,0.2-1.1,0-1.3-0.5c-0.1-0.3-0.1-0.6,0-0.8L8.6,18L20.5,16L8.6,14.1L5.1,6.9c-0.2-0.5,0-1.1,0.5-1.3C5.8,5.5,6.1,5.5,6.4,5.6z"></path></svg>}
           />
          </InputGroup>
            </FormControl>

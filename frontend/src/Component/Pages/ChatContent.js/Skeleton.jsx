@@ -17,7 +17,7 @@ export default function SearchData({value}) {
   //     })
   //     return
   //   } catch (error) {
-  //     console.log(error,"okpkpoko")
+
   //   }
   //  // if (!toast.isActive(id)) {
        

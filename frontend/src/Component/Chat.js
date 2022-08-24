@@ -2,11 +2,10 @@ import axios from 'axios';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import { CHAT_LOGIN_STATUS, GetToken } from '../Token/Token';
-import TOKEN_NAME from '../Token/Token';
-import { GetToast } from './Toast';
+
 import { useNavigate } from 'react-router-dom';
 import { DataStore } from '../Context/ChartProvider';///all data container
-import { HasLoggedIn } from './HasLoggedIn';
+
 import SideBar from './Pages/ChatContent.js/Header';
 import ChartBoard from './Pages/ChatContent.js/ChartBoard';
 import { MyChat } from './Pages/ChatContent.js/MyChat';
@@ -22,12 +21,6 @@ import {
   useFocusEffect
 
 } from '@chakra-ui/react'
-import io from 'socket.io-client';
-
-
-
-
-
 export const Chat  =  ()=>{ 
 
     const history  = useNavigate()
@@ -35,17 +28,19 @@ export const Chat  =  ()=>{
     const [load,setLoad]  = useState(false)
     const [firstload,firstloadUpdaterFunction]  = useState(false)
     const [mycontact, setMyContact] = useState([]) 
+
     const {
       user,setUser,
       userInfo,setUserInfo,
       chats,setChats,
       setHasError,
       selectedChat,setSelectedChat,
-      setShowActionMenue
+      setShowActionMenue,
+
       
     }  = DataStore();
 
-    const ioClient  = io('/'/*server io*/)
+
 
 
 
@@ -110,6 +105,7 @@ export const Chat  =  ()=>{
        getToast("SESSION EXPIRED","Login again","error",2100,"top")
       setTimeout(()=>{
           history('/')
+          window.location.reload()
           window.location.href='/'
       },0)
     
