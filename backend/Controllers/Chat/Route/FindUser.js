@@ -21,7 +21,7 @@ let FindeUSer = (router)=>{
         
         try {
               const users  =  await User.find($query).find({_id:{$ne:req.charUserId}})
-                res.json({ users })
+              return  res.json({ users })
         } catch (error) {
             
         }

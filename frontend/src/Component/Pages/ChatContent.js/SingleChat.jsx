@@ -41,7 +41,7 @@ export default function SingleChat({getMyChatList}) {
 
     } = DataStore()
 
-    const socket  = io('http://localhost:7000')
+    const socket  = io('/')
 
     useEffect(
   
@@ -75,14 +75,14 @@ export default function SingleChat({getMyChatList}) {
    })
 
    if(typingIn){
-    console.log("IS TYPING 1", enterCount)
+  ///  console.log("IS TYPING 1", enterCount)
      socket.emit('is-typing', userInfo);
    }
 
    socket.on('is-typing-in',(user_)=>{
-    console.log("IS TYPING 2", enterCount,user_.fn)
+    //console.log("IS TYPING 2", enterCount,user_.fn)
      if(user_._id !== userInfo._id){
-       console.log("RECEIVE TYPING")
+     //  console.log("RECEIVE TYPING")
         setTypeValue(`${user_.fn} is typing...`)
         setTimeout(()=>{setTypeValue(``)},3000)
      }

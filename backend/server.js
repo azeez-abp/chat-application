@@ -59,7 +59,7 @@ app.use(express.static(path.join(__dirname,'/public')))
 //studentComponent(app)  
 app.use((req,res,next)=>{
   // console.log(req.session)
-   console.log(req.user)////passport-local user
+   //console.log(req.user)////passport-local user
   // console.log(req.logout)
   next()
 })
@@ -76,15 +76,31 @@ require('./Controllers/Chat/Route')(app)
 //   console.log("IO POST REQUESTY")
 // })
 //require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',true,true,{w:40,h:40},false,{s:2000,w:3000,h:200});
-//require('./Lib/Mailer')('adioadzeez@gmail.com',['adioadey@yahoo.com','adioadeyz@gmail.com'],'Testing node amile',`<h1>Hello AZ</h1>`)
-app.get('/*',(req,res)=>{
-    res.send(`<h1>404 File not file</h1>`)
-})
+//require('./Lib/Mailer')('adioadeyorizeez@gmail.com',['adioadeyoriazeez@yahoo.com','adioadeyoriazeez@gmail.com'],'Testing node amile',`<h1>Hello AZ</h1>`)
+// app.get('/*',(req,res)=>{
+//     res.send(`<h1>404 File not file</h1>`)
+// })
+if (process.env.NODE_ENV === 'production') {
+  // Serve any static files
+  const root_dir_all  = path.join(path.resolve( __dirname), '../frontend/build')
+//console.log(root_dir_all,root_dir_all+"\\index.html");
+  app.use(express.static(root_dir_all ));
+    
+  // Handle React routing, return all requests to React app
+ app.get('*', function(req, res) {/////if the request is get method go to the frontend index
+   // res.sendFile(path.join(__dirname, 'clients/build', 'index.html'));
+   return  res.sendFile(root_dir_all+"\\index.html")
+  });
+}else{
+  
+}
+/////////////////////////////////////////////////////////////
+//////////////////////////LIST OF COMPONENT CONTROOLERS
 
 //require('./Controllers/Chat/io').io1(5200)
 
 require('./Controllers/Chat/io').ioexpress(app).listen(PORT,()=>{
-  console.log(`CONNECTED @ 127.0.0.1:${PORT}`)
+  console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
 });
 
 
