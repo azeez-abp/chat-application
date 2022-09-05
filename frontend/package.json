@@ -2,7 +2,7 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "https://abp-chat-app.herokuapp.com",
+  "proxy": "https://abp-chat-app.herokuapp.com/",
   "dependencies": {
     "@chakra-ui/icons": "^2.0.6",
     "@chakra-ui/react": "^2.2.4",
