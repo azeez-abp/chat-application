@@ -10,7 +10,7 @@
     "scripts": {
         "start": "nodemon server.js",
         "dev": "npm run start --open",
-        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build  --mode production"
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend --mode production"
     },
     "keywords": [],
     "author": "",
