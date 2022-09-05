@@ -8,7 +8,7 @@
 backened/node_modules
 backened/public
 backened/tgit
-#frontend/build
+frontend/build
 frontend/node_modules
 node_modules
 .env
