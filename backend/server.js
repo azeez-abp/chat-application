@@ -7,7 +7,7 @@ const session = require('express-session')
 const cookie_parser  =require('cookie-parser')  
 const passport  =require('passport') 
 let PORT   = process.env.PORT || 7000
-
+console.log  (path.join(__dirname))
 
 var whitelist = [
 'http://example1.com', 
@@ -16,7 +16,8 @@ var whitelist = [
 '127.0.0.1:7000',
 'http://localhost:3000',
 'localhost:7000',
-'undefined'
+'undefined',
+'https://abp-chat-app.herokuapp.com/'
 ]
 var corsOptions = {
   origin: function (origin, callback) {
@@ -43,13 +44,13 @@ corsOptionsDelegate = function (req, callback) {
 
 }
 
-//console.log(module)
+
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
 app.use(cors(corsOptionsDelegate ));
 app.use(require(path.join(__dirname,'Middleware','HeaderOption')))
 app.use(cookie_parser());
-app.use(express.static(path.join(__dirname,'/public')))
+
 //the order is important
 //app.use(passport.initialize());
 //app.use(require('./Lib/Config/session/Session').session())
@@ -93,7 +94,7 @@ if (process.env.NODE_ENV === 'production') {
    return  res.sendFile(root_dir_all2)
   });
 }else{
-  
+  app.use(express.static(path.join(__dirname,'/public')))
 }
 /////////////////////////////////////////////////////////////
 //////////////////////////LIST OF COMPONENT CONTROOLERS
