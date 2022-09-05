@@ -30,7 +30,7 @@ return mongoose.model(tableName,new Schema(tableSchema,{
 
 
 module.exports= {
-    users:generalTable.build("users",require('./Tables/USer')),
+    users:generalTable.build("users",require('./Tables/User')),
     chats:generalTable.build('chats',require('./Tables/Chat')),
     messages:generalTable.build('messages',require('./Tables/Message')),
   
