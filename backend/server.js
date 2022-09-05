@@ -85,9 +85,11 @@ require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',t
 if (process.env.NODE_ENV === 'production') {
   // Serve any static files
   const root_dir_all  = path.join(path.resolve( __dirname),'..', 'frontend','build')
+  const root_dir_public  = path.join(path.resolve( __dirname),'public')
   const root_dir_all2  = path.join(path.resolve( __dirname),'..', 'frontend','build','index.html')
 //console.log(root_dir_all,root_dir_all+"\\index.html");
   app.use(express.static(root_dir_all ));
+  app.use(express.static(root_dir_public));
     
   // Handle React routing, return all requests to React app
  app.get('*', function(req, res) {/////if the request is get method go to the frontend index
