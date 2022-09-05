@@ -10,7 +10,7 @@
     "scripts": {
         "start": "node server.js",
         "dev": "npm run start --open",
-        "heroku-postbuild": "cd app &&  NPM_CONFIG_PRODUCTION=false npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production"
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production"
     },
     "keywords": [],
     "author": "",
