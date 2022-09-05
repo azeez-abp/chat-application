@@ -2,13 +2,13 @@
     "name": "chat-app",
     "version": "1.0.0",
     "description": "",
-    "main": "backend/server.js",
+    "main": "server.js",
     "engines": {
         "node": "16.16.0",
         "npm": "8.11.0"
       },
     "scripts": {
-        "start": "node backend/server.js",
+        "start": "node server.js",
         "dev": "npm run start --open",
         "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production"
     },
