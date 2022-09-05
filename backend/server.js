@@ -47,7 +47,8 @@ corsOptionsDelegate = function (req, callback) {
 
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
-app.use(cors(corsOptionsDelegate ));
+//app.use(cors(corsOptionsDelegate ));
+app.use(cors());
 app.use(require(path.join(__dirname,'Middleware','HeaderOption')))
 app.use(cookie_parser());
 
