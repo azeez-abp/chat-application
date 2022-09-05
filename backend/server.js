@@ -67,7 +67,7 @@ app.use((req,res,next)=>{
  
 //require('./Controllers/Student/Route')(app) 
 //app.use('/chat')
-require('./Controllers/Chat/Route')(app)
+require(path.join(__dirname,'Controllers/Chat/Route') )(app)
 
 // app.get('/soclet.io/:id',(req,res)=>{
 //   console.log("IO GET REQUESTY")
@@ -101,7 +101,7 @@ if (process.env.NODE_ENV === 'production') {
 
 //require('./Controllers/Chat/io').io1(5200)
 
-require('./Controllers/Chat/io').ioexpress(app).listen(PORT,()=>{
+require(path.join(__dirname,'./Controllers/Chat/io') ).ioexpress(app).listen(PORT,()=>{
   console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
 });
 
