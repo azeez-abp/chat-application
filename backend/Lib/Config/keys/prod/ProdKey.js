@@ -1,6 +1,24 @@
 module.exports = {
-    'MONGO_URI':process.env.MONGO_URI,
-    'MYSQL_URI':{'HOST_NAME':process.env.HOST_NAME,
-    'USER':process.env.USER,
-    'PASSWORD':process.env.PASSWORD,'DB':process.env.DB}
+    'MONGO_URI':process.env.MONGO_LIVE_2,
+    'MONGO_URI_LOCAL':process.env.MONGO_LOCAL,
+    'MYSQL_URI':{
+        'host':process.env.MYSQL_LOCAL_HOST,
+        'user':process.env.MYSQL_LOCAL_USER,
+        'password':process.env.MYSQL_LOCAL_PASS,
+        'database':process.env.MYSQL_LOCAL_DB
+     },
+    'COOKIE_NAME':process.env.COOKIE_NAME,
+    'ACCESS_TOKEN':process.env.ACCESS_TOKEN,
+    'REFRESH_TOKEN':process.env.REFRESH_TOKEN,
+    'SESSION_NAME':process.env.SESSION_NAME,
+    'SESSION_TOKEN':process.env.SESSION_TOKEN,
+
+    'ROOT_FOLDER':'nodemc',
+    'DB_TYPE':process.env.DB_TYPE,
+
+     'MAIL_URL':{
+        h:process.env.MAIL_HOST,
+        u:process.env.MAIL_USER,
+        p:process.env.MAIL_PASS
+    }
 }
