@@ -77,7 +77,7 @@ require(path.join(__dirname,'Controllers/Chat/Route') )(app)
 // app.post('/soclet.io/:id',(req,res)=>{
 //   console.log("IO POST REQUESTY")
 // })
-//require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',true,true,{w:40,h:40},false,{s:2000,w:3000,h:200});
+require('./Lib/Fs/uploader/FileUploder')(app,'/api/fileupload','public/images',true,true,{w:40,h:40},false,{s:2000,w:3000,h:200});
 //require('./Lib/Mailer')('adioadeyorizeez@gmail.com',['adioadeyoriazeez@yahoo.com','adioadeyoriazeez@gmail.com'],'Testing node amile',`<h1>Hello AZ</h1>`)
 // app.get('/*',(req,res)=>{
 //     res.send(`<h1>404 File not file</h1>`)
