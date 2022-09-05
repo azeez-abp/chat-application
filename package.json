@@ -1,5 +1,5 @@
 {
-    "name": "web-app",
+    "name": "chat-app",
     "version": "1.0.0",
     "description": "",
     "main": "server.js",
@@ -10,7 +10,7 @@
     "scripts": {
         "start": "nodemon server.js",
         "dev": "npm run start --open",
-        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
+        "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production"
     },
     "keywords": [],
     "author": "",
