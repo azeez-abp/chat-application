@@ -67,8 +67,8 @@ app.use((req,res,next)=>{
  
 //require('./Controllers/Student/Route')(app) 
 //app.use('/chat')
-require('./backend/Controllers/Chat/Route')(app)
-
+require(path.join(__dirname,'backend','Controllers','Chat','Route'))(app)
+//'./backend/Controllers/Chat/Route'
 // app.get('/soclet.io/:id',(req,res)=>{
 //   console.log("IO GET REQUESTY")
 // })
@@ -100,8 +100,8 @@ if (process.env.NODE_ENV === 'production') {
 //////////////////////////LIST OF COMPONENT CONTROOLERS
 
 //require('./Controllers/Chat/io').io1(5200)
-
-require('./backend/Controllers/Chat/io').ioexpress(app).listen(PORT,()=>{
+//'./backend/Controllers/Chat/io'
+require(path.join(__dirname,'backend','Controllers','Chat','io')).ioexpress(app).listen(PORT,()=>{
   console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
 });
 
