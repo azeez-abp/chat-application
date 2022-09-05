@@ -17,7 +17,7 @@ var whitelist = [
 'http://localhost:3000',
 'localhost:7000',
 'undefined',
-'https://abp-chat-app.herokuapp.com/'
+'https://abp-chat-app.herokuapp.com'
 ]
 var corsOptions = {
   origin: function (origin, callback) {
