@@ -188,7 +188,7 @@ fetchChatsMessages()
 },[selectedChat])
 
 const sendMessage  = (e)=>{
-  if(e.key ==='Enter' && newMessage){
+  if(newMessage){
    
          setNewMessage('')
          makeRequest('/api/chatline/sendmessage',{content:newMessage,chatId:selectedChat[0]._id},(err, data)=>{
@@ -309,7 +309,7 @@ const userStopTyping  = ()=>{
               </MessageBody>
            </div>
 
-          <FormControl  onKeyDown={sendMessage}   
+          <FormControl   
           isRequired 
           bg={"#fff"}
           display={"flex"}
@@ -360,7 +360,7 @@ const userStopTyping  = ()=>{
              cursor={"pointer"}
              right={"17px"}
              borderLeft={"2px solid #e3e3e3"}
-           
+             onClick={sendMessage}
           
             children={ <svg color="white" viewBox="0 0 32 32" aria-hidden="true" class="e5ibypu0 lc-di14ft"><path d="M6.4,5.6l21,9.5c0.5,0.2,0.7,0.8,0.5,1.3c-0.1,0.2-0.3,0.4-0.5,0.5l-21,9.5  c-0.5,0.2-1.1,0-1.3-0.5c-0.1-0.3-0.1-0.6,0-0.8L8.6,18L20.5,16L8.6,14.1L5.1,6.9c-0.2-0.5,0-1.1,0.5-1.3C5.8,5.5,6.1,5.5,6.4,5.6z"></path></svg>}
           />

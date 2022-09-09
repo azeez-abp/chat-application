@@ -118,11 +118,13 @@ require(path.join(__dirname,'./Controllers/Chat/io') ).ioexpress(app).listen(POR
 //https://www.1377x.to/search/learn%20python%20programming%20masterclass/1/
 
 //https://www.includehelp.com/php/basics-aptitude-questions-and-answers.aspx
+//https://www.includehelp.com/articles/cross-site-request-forgery-csrf-attacks.aspx
 //https://www.includehelp.com/aptitude-questions-and-answers.aspx?ref=prep
 
 //https://pages.awscloud.com/EMEA_Free_Live_Training-confirmation.html?aliId=eyJpIjoibEsyRWxsVmxIQ2hpUHB1SSIsInQiOiJUOUtxWmQ4b2NPSnlySWo4REZUTXpnPT0ifQ%253D%253D
 
 /**
+ * https://pages.awscloud.com/EMEA_Free_Live_Training-confirmation.html?aliId=eyJpIjoibEsyRWxsVmxIQ2hpUHB1SSIsInQiOiJUOUtxWmQ4b2NPSnlySWo4REZUTXpnPT0ifQ%253D%253D
  * Q:
 Can we use load balance on any of this database and how will application know which database has the record it request for in the case of horizontally scaled database
 A:
