@@ -1,5 +1,11 @@
-require('dotenv').config();
-//console.log(process.env.MONGO_LIVE )
+let path  = __dirname.match(/.+(?=backend)/);
+
+require('dotenv').config({
+    path:path[0]+"\\.env",
+    debug:true
+});
+
+
 module.exports = {
     'MONGO_URI':process.env.MONGO_LIVE_2,
     'MONGO_URI_LOCAL':process.env.MONGO_LOCAL,

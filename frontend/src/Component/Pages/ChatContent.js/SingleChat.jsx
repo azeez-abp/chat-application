@@ -1,10 +1,7 @@
-import { ArrowBackIcon, AttachmentIcon, ChatIcon, ViewIcon } from '@chakra-ui/icons'
+import { ArrowBackIcon, AttachmentIcon,  ViewIcon } from '@chakra-ui/icons'
 import { Box, Text,Spinner, FormControl,
   FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Input,
-  TextArea,
+ 
   InputRightElement,
   InputGroup,
   InputLeftElement,

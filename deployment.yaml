@@ -1,0 +1,60 @@
+#pod config
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx
+  labels:
+    name: nginx
+spec:
+  containers:
+  - name: nginx-container
+    image: nginx
+    resources:
+      limits:
+        memory: "128Mi"
+        cpu: "500m"
+    ports:
+      - containerPort: 80
+  #metadta is an object
+
+# {
+#structure is object and list -
+#   apiVersion: v1,
+#   kind: Pod,
+#   metadata:{
+#      labels:{
+#        name: nginx
+#      }
+#   }
+#   spec:{
+#     containers:[
+#         {
+#          name:nginx-container
+#         }
+#         ,
+#          {
+#          image:nginx
+#         },
+
+#         {
+#          port : [
+#               {
+#                 containerPort: 80
+#               }  
+#            ]
+#         },
+
+#         {
+#          volumeMount:[
+#                {
+#                  name: nginx-vol,
+#                  mountPath: /usr/nginx/html
+#                 }
+#            ]  
+#         }
+
+#     ]
+#   }
+   
+
+# }
