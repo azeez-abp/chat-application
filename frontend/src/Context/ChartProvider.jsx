@@ -74,3 +74,6 @@ export const DataStore  = ()=>{////import this to all child that need their data
 return useContext(ChartContext)   
 } 
 
+
+
+
