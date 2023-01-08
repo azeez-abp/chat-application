@@ -7,6 +7,7 @@ const session = require('express-session')
 const cookie_parser  =require('cookie-parser')  
 const passport  =require('passport') 
 let PORT   = process.env.PORT || 7000
+console.log(process)
 //console.log  (path.join(__dirname))
 
 var whitelist = [

@@ -1,5 +1,0 @@
-{
-    "sonarlint.analyzerProperties": {
-        "sonar.javascript.node.maxspace": "4096"
-    }
-}

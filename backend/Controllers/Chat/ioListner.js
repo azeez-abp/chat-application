@@ -1,6 +1,6 @@
 const customeEvent  = (client,eventName)=>{
     client.on(eventName,(num,str,obj)=>{//number data must be the first, str data follw then obj data
-          console.log(str,num,obj)
+          //console.log(str,num,obj)
     })
 }
 
@@ -15,7 +15,7 @@ const joinEventVideo  = (client,eventName='joined',socket,channels,peers,config/
         var peer_message  = config.peerMessage
         /////////////////////////////////////////////////////////////
         if (channel in socket.channels) {
-            console.log("[" + socket.id + "] [Warning] already joined", channel);
+          //  console.log("[" + socket.id + "] [Warning] already joined", channel);
             return;
           }
           // no channel aka room in channels init
@@ -51,7 +51,7 @@ const joinEventVideo  = (client,eventName='joined',socket,channels,peers,config/
               should_create_offer: true,
               iceServers: iceServers,
             });
-            console.log("[" + socket.id + "] emit add Peer [" + id + "]");
+          //  console.log("[" + socket.id + "] emit add Peer [" + id + "]");
           }
       
           channels[channel][socket.id] = socket;

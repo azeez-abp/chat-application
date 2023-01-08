@@ -6,7 +6,7 @@
 .pnp.js
 .ssh
 backened/node_modules
-
+.vscode
 backened/tgit
 frontend/build
 frontend/node_modules
