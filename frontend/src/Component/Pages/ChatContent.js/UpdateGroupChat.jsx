@@ -3,7 +3,6 @@ import { Modals } from '../../Modal'
 import { Button,Avater,Box ,FormControl, Input,FormLabel,Text,  Tag,
   TagLabel,
   TagCloseButton,
-  HStack,
   useDisclosure,
 
 } from '@chakra-ui/react'
@@ -12,6 +11,7 @@ import { GetToken } from '../../../Token/Token'
 import axios from 'axios'
 import { DataStore } from '../../../Context/ChartProvider'
 import { useEffect,useRef } from 'react'
+import { app_domain_proxy } from '../../app_domain'
 
 
 export const UpdateGroupChat  = ({title,style,getToast, chat,makeRequest,resetActionMenue}) => {
@@ -36,9 +36,7 @@ useEffect(()=>{
   chat.users.forEach(user=>{
     ids.push(user._id)
   })
-
   setSelectedUsersIds(ids)
-
 },[] )
 
 
@@ -134,7 +132,7 @@ const addToGroup  = (data)=>{
 
 const fetchChatsMessages  = async ()=>{
   setIsLoading(true)
-await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
+await  makeRequest(app_domain_proxy+'/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
 if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
 
 if(data.suc) setMessage(data.message) ;setIsLoading(false)
@@ -160,10 +158,10 @@ const  updateGroup  = ()=>{
 //
 
   
-      setIsLoading(true)
+setIsLoading(true)
 setTimeout(()=>{
 
-  makeRequest('/api/chat/updategroup',data,(err,data2)=>{
+  makeRequest(app_domain_proxy+'/api/chat/updategroup',data,(err,data2)=>{
     if(err){
       setIsLoading(false)
       return getToast('Reqest Error', err.message,'error')

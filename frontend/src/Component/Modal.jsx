@@ -8,7 +8,6 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
-    MenuItem
   } from '@chakra-ui/react'
 
   import React from 'react'

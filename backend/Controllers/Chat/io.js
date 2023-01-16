@@ -1,14 +1,32 @@
 const listner   = require('./ioListner')
+var os = require('os');
+var interfaces = os.networkInterfaces();
+var addresses = ['127.0.0.1:3000','https://embracechatapp.azurewebsites.net'];
+for (var k in interfaces) {
+    for (var k2 in interfaces[k]) {
+        var address = interfaces[k][k2];
+        if (address.family === 'IPv4' && !address.internal) {
+            addresses.push(address.address+":3000");
+        }
+    }
+}
+
+//console.log(addresses);//
 const io1  = (port)=>{
+  
     const io = require('socket.io')(port,{
+   
       cors:{
-        origin:['http://localhost:3000']
+        //origin:['http://localhost:3000','https://embracechatapp.azurewebsites.net/']
+        origin: addresses
+
       }
     })
+
     io.on('connection',(client)=>{
       console.log("IO STARTED2",client.id)
     })
-  console.log("IO STARTED")
+  //console.log("IO STARTED")
   
   }
 
@@ -16,6 +34,7 @@ const io1  = (port)=>{
 
 
   const ioexpress  = (app)=>{
+   
         const { createServer } = require("http");
         const { Server } = require("socket.io");
    
@@ -23,7 +42,7 @@ const io1  = (port)=>{
         const io = new Server(httpServer, {
          /* options */ 
          cors:{
-            origin:['http://localhost:3000']
+            origin:['http://localhost:3000',...addresses]
           }
         
         /**/ });
@@ -32,24 +51,27 @@ const io1  = (port)=>{
         var channels = {}; // collect channels
         var sockets = {}; // collect sockets
         var peers = {}; // collect peers info grp by channels
-
-        io.on("connection", (client) => { 
-             let socket = client
+        // console.log(io)
+        io.on("connection", (io_backend) => { 
+            
+           //  backend.emit("connection")
+           //  console.log(backend,"iS ")
+            // console.log("CONEECTION")
              ///we have server io
               // we have client socket
               //all function happen here
               ////////////////////////////////////////////////////////////////*************** */
 
             ///////////////////////////////peer[channel==chat._id][socket.id==user._id]
-            listner.setupEvent(client,'setup',peers,channels,(returnData)=>{
+            listner.setupEvent( io_backend,'setup',peers,channels,(returnData)=>{
 
              peers   = {...returnData.peers }
              channels   = {...returnData.channels }
           // sockets  = {...setUp.socket}
            })           
-             listner.typingEvent(client,'is-typing',sockets )
-             listner.newMessageSendEvent(client)
-             console.log('connected room(socket==client) '+ JSON.stringify(client.channels),socket.id )
+             listner.typingEvent( io_backend,'is-typing')
+             listner.newMessageSendEvent(io_backend)
+          console.log('connected room(socket==client) ',io_backend.id )
 
             ////////////////////////////////////////////////////////////////*************** //
 
@@ -62,4 +84,4 @@ const io1  = (port)=>{
 
   }
 
-module.exports   = {io1,ioexpress}
+module.exports   = {ioexpress}

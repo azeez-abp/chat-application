@@ -8,7 +8,7 @@ import { DataStore } from '../../../Context/ChartProvider'
 
 
 export default function ChartBoard({getMyChatList}) {
-  const {selectedChat,userInfo} = DataStore()
+  const {selectedChat} = DataStore()
   const [c,sc]  = useState({})
 
   const f = (e)=>{   
@@ -48,11 +48,11 @@ export default function ChartBoard({getMyChatList}) {
         body = eventDoc.body;
 
         event.pageX = event.clientX +
-          (doc && doc.scrollLeft || body && body.scrollLeft || 0) -
-          (doc && doc.clientLeft || body && body.clientLeft || 0);
+          ( (doc && doc.scrollLeft) || ( body && body.scrollLeft) || 0) -
+          ( (doc && doc.clientLeft) || (body && body.clientLeft) || 0);
         event.pageY = event.clientY +
-          (doc && doc.scrollTop  || body && body.scrollTop  || 0) -
-          (doc && doc.clientTop  || body && body.clientTop  || 0 );
+          ( (doc && doc.scrollTop ) || (body && body.scrollTop)  || 0) -
+          ( (doc && doc.clientTop)  || (body && body.clientTop)  || 0 );
     }
     return {x:event.pageX,y:event.pageY}
   }

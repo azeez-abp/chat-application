@@ -1,5 +1,5 @@
 let Chat = (router)=>{
-    
+    console.log("wqeda")
    require('./Route/Login')(router)
    require('./Route/Register')(router) 
    require('./Route/GroupChat').CreateGroup(router)   
@@ -16,6 +16,7 @@ let Chat = (router)=>{
    ////////////////////////////////////////
    require('./Route/ChatApi/OneToOne').SendMessage(router)
    require('./Route/ChatApi/OneToOne').GetAllMessage(router)
+   require('./Route/ChatApi/OneToOne').DeleteMessage(router)
 
    
 }  

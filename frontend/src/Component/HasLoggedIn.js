@@ -1,6 +1,7 @@
 import TOKEN_NAME from '../Token/Token'
 import axios from 'axios'
 import { GetToken,CHAT_LOGIN_STATUS } from '../Token/Token'
+import { app_domain_proxy } from './app_domain'
 
 export const hasLoggedIn   = ()=>{
 
@@ -11,7 +12,7 @@ export const hasLoggedIn   = ()=>{
                     
                   },
          data: {},
-         url:'/api/chat/checklogin',
+         url:app_domain_proxy+'/api/chat/checklogin',
        };
       let d  =  axios(options)
        d.then(out=>{

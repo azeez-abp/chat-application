@@ -119,16 +119,17 @@ const joinedEvent  = (client,eventName='joined',serverIo)=>{
 }
 
 
-const typingEvent  = (client,eventName='is-typing',sockets)=>{
+const typingEvent  = (client,eventName='is-typing')=>{
     client.on(eventName,(user)=>{//number data must be the first, str data follw then 
         client.broadcast.emit('is-typing-in',user)  
     })
 }
 
 
-const newMessageSendEvent  = (client,eventName='new-messaga-send',sockets)=>{
-  client.on(eventName,(num,id,msg)=>{//number data must be the first, str data follw then 
-      client.broadcast.emit('has-send-message',num,id,msg)  
+const newMessageSendEvent  = (io_backend,eventName='new-message-send')=>{
+
+  io_backend.on(eventName,(num,id,msg)=>{//number data must be the first, str data follw then 
+        io_backend.broadcast.emit('has-send-message',num,id,msg)  
   })
 }
 

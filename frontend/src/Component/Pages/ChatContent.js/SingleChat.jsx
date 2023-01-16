@@ -17,6 +17,7 @@ import { GetToken } from '../../../Token/Token'
 import axios from 'axios'
 import MessageBody from './MessageBody'
 import {io} from 'socket.io-client'
+import { app_domain_proxy } from '../../app_domain'
 
 export default function SingleChat({getMyChatList}) {
     const [viewSelectedChatProfile,setViewSelectedChatProfile]    =useState(false)
@@ -37,34 +38,36 @@ export default function SingleChat({getMyChatList}) {
         typeValue,setTypeValue
 
     } = DataStore()
+// let socket ;
+//     try {
+//       socket  = io('/'/*backend url*/) 
+//     } catch (error) {
+//       console.log(error)
+//     }
 
-    const socket  = io('/')
+let socket  = io('ws://localhost:7000')
+
+
+  
 
     useEffect(
   
       ///////////////////
       ()=>{
-
-    
-   
     ///////////////////////////////////////////
- if(selectedChat.length>0){
+ if(selectedChat.length>0){/////listed peopleyou chat with at the sidebar
     socket.on('connect',()=>{
       //////////////////////////////everything in s
      setHasConnected(true)
-     console.log(selectedChat," se")
       selectedChat.length>0 && socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
 
     })
    // selectedChat.length>0 &&  socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
     /////////////////////////////////////////////
-    socket.on('connected',(data)=>{
-    //(data !=='' || data !=='null') && getToast('CONNETION MESSAGE',`${data.fn} has joined`,'success') 
-  //getToast('CONNETION MESSAGE','You join room'+data,'success')
-   }) 
+  
    ///////////////////////////////////////////////////////////
    socket.on('user-enter',(user_)=>{
-    if(user_._id !=userInfo._id && enterCount===0){
+    if(user_._id != userInfo._id && enterCount===0){
         setTypeValue(`${user_.fn} just enter the room `)
         enterCount  = enterCount+1
        setEnterCount(enterCount)
@@ -72,7 +75,6 @@ export default function SingleChat({getMyChatList}) {
    })
 
    if(typingIn){
-  ///  console.log("IS TYPING 1", enterCount)
      socket.emit('is-typing', userInfo);
    }
 
@@ -84,7 +86,7 @@ export default function SingleChat({getMyChatList}) {
         setTimeout(()=>{setTypeValue(``)},3000)
      }
    })
-   console.log(typeValue," valu")
+  // console.log(typeValue," valu")
     //socket.emit('setup',{...userInfo,room_id:socket.id})
     //socket.on('typin')
     
@@ -93,7 +95,10 @@ export default function SingleChat({getMyChatList}) {
     ///////////////////
       //  getToast('Message Sending Error','doen','success',4000,'top')
            } //if end
-    },[selectedChat,typingIn])  
+    },
+    [selectedChat,typingIn]
+   // []
+    )  
     
 
 
@@ -108,7 +113,7 @@ export default function SingleChat({getMyChatList}) {
           
           // body:  {userID:inp},
            data:  data,
-          url:url,
+          url:app_domain_proxy+ url,
         };
         try {
             let d  =  await axios(options)
@@ -138,14 +143,20 @@ export default function SingleChat({getMyChatList}) {
           
    
   useEffect(()=>{
+    let isApiSubscribed =true
+
     socket.on('has-send-message',(num,id,messages_)=>{
-      console.log(id, messages_, "BY IOs")
+     
        if(id!==userInfo._id){
         setMessages(messages_)
        }
     })     
  
-   },[messages])
+    return () => {
+      // cancel the subscription
+      isApiSubscribed = false;
+  };
+   },[])
 
 
 
@@ -182,7 +193,10 @@ const fetchChatsMessages  = async ()=>{
 
 useEffect(()=>{
 fetchChatsMessages()
-},[selectedChat])
+},
+[selectedChat]
+//[]
+)
 
 const sendMessage  = (e)=>{
   if(newMessage){
@@ -192,8 +206,9 @@ const sendMessage  = (e)=>{
             if(err) return getToast('Message Sending Error',err.message,'error',4000,'top')
             
             if(data.suc){ 
-            //   setMessages([...messages,data.message])
-                socket.emit("new-messaga-send",1,userInfo._id,[...messages,data.message])
+                setMessages([...messages,data.message])
+                socket.emit("new-message-send",1,userInfo._id,[...messages,data.message])
+                socket.on("has-send-message",fetchChatsMessages)
             };
       } )
   }
@@ -236,7 +251,7 @@ const userStopTyping  = ()=>{
       /></Box>):
      (<>
            
-    < Box
+    <Box
        display={"flex"}
        flexDir="column"
        justifyContent={"space-between"}
@@ -373,7 +388,7 @@ const userStopTyping  = ()=>{
            
        
        </Box>  
-       </ > )
+       </> )
       
 
       :

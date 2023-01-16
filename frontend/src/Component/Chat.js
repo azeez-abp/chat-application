@@ -12,15 +12,17 @@ import { MyChat } from './Pages/ChatContent.js/MyChat';
 import { hasLoggedIn } from './HasLoggedIn';
 import { 
   Box, 
-  Container,
-  VStack,
-  Text,
-  Flex,
   useToast,
-  HStack,
-  useFocusEffect
+  // Container,
+  // VStack,
+  // Text,
+  // Flex,
+ 
+  // HStack,
+  // useFocusEffect
 
 } from '@chakra-ui/react'
+import { app_domain_proxy } from './app_domain';
 export const Chat  =  ()=>{ 
 
     const history  = useNavigate()
@@ -56,7 +58,7 @@ export const Chat  =  ()=>{
           
           // body:  {userID:inp},
            data:  {userID:user_id },
-          url:"/api/chat/"+url,
+          url:app_domain_proxy+"/api/chat/"+url,
         };
         try {
             let d  =  await axios(options)
@@ -142,7 +144,7 @@ const getData  = async (getChatListCb)=>{
           'authorization': 'Bearer '+GetToken()
          },
       //  data: qs.stringify(data),
-        url:"/api/chat/profile",
+        url:app_domain_proxy+"/api/chat/profile",
       };
       try {
           let d  =await axios(options)

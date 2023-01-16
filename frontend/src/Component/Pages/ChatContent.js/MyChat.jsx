@@ -2,9 +2,9 @@ import { AddIcon } from '@chakra-ui/icons'
 import { 
   
     Text,
-    Flex,
+    //Flex,
     Avatar,
-    Badge,
+    //Badge,
     Box,
     Button,
     VStack,
@@ -31,10 +31,11 @@ import { useToast } from '@chakra-ui/react'
 import { Modals } from '../../Modal'
 import { useState } from 'react'
 import UserList from './UserList'
-import { useEffect } from 'react'
+//import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DeleteChat from './DeleteChat'
 import {UpdateGroupChat} from './UpdateGroupChat'
+import { app_domain_proxy } from '../../app_domain'
 
 export const MyChat = ()=>{
   const [searchItemLoaded, setSearchItemLoading ]  = useState(false)
@@ -162,7 +163,7 @@ const handleGroupNameInputChange = (ev)=>{
       
       // body:  {userID:inp},
        data:  {search:ev.target.value},
-      url:"/api/chat/getuser",
+      url:app_domain_proxy+"/api/chat/getuser",
     };
     try {
         let d  =await axios(options)
@@ -217,7 +218,7 @@ const handleGroupNameInputChange = (ev)=>{
         return  getToast('Validation Error','Group name is required','error',5000,'top')
        }
    
-      makeRequest('api/chat/addgroup',{users:userSelectedForGroupChat,name:groupName},(err,data)=>{
+      makeRequest(app_domain_proxy+'api/chat/addgroup',{users:userSelectedForGroupChat,name:groupName},(err,data)=>{
              if(err){
               setIsLoading(false)
               return getToast('Error Occure',err.message,'error',5000,'top')
@@ -280,24 +281,9 @@ const getCoordinate  = event=>{
 
   setShowActionMenue({...menueIds,[event.target.getAttribute('chatid')]: !showActionMenue[event.target.getAttribute('chatid')] })
 
-  //setChats(chats)
-   
-
-}
  
-
-const  leftClickMenuShow  = e=>{
-
 }
 
-const deleteChat  = chat=>{
-///send delete request 
-// take the remaining chata filter it
-///set the remaining chat
-  
-
-  
-}
 
     return(
       
@@ -367,7 +353,7 @@ const deleteChat  = chat=>{
                           return (
                          /*The tag for list of  searched user */   
                         <UserList
-                          key  ={user.userId} 
+                          key  ={ind} 
                           user = {user}
                           bg  = { ( hasNotBeenSeleted.hasOwnProperty(user._id)&& hasNotBeenSeleted[user._id]==false)?'#097969':'#E8E8E8'}
                           color  = { ( hasNotBeenSeleted.hasOwnProperty(user._id)&& hasNotBeenSeleted[user._id]==false)?'#ffffff':'#000000'}

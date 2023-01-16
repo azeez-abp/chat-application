@@ -15,6 +15,7 @@ import {
   } from '@chakra-ui/react'
 
 import  { SaveToken,CHAT_LOGIN_STATUS } from '../../Token/Token';  
+import { app_domain_proxy } from '../app_domain';
 
 
 export const Login = (props)=> {   
@@ -24,7 +25,7 @@ export const Login = (props)=> {
    const [isError, setIsError]  = useState({email:false,password:false})
    const [show, setShow]  = useState(false);
    const [isLoading, setLoading] = useState(false)
-   const [hasLogin, setHasLogin]  = useState(false);
+   //const [hasLogin, setHasLogin]  = useState(false);
 
 
    const toast = useToast()
@@ -77,7 +78,7 @@ export const Login = (props)=> {
                    
                  },
         data: credential,
-        url:'/api/chat/post-login',
+        url:app_domain_proxy+'/api/chat/post-login',
       };
     
       try {  

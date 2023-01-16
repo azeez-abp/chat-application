@@ -77,6 +77,32 @@ let GetAllMessage = (router)=>{
      }  
 
 
+
+
+     const deleteMessageFunction  = async (req,res)=>{
+      console.log(req.params)
+      return res.json({err:" Not yet iimplemented"})
+      
+      try {
+          var message  = await MessageDB.deleteOne({chatId:req.params.chatId}).populate('sender','fn email profile_img').populate('chatId');
+         // console.log(message)
+       
+           return res.status(200).json({suc:" Done",message}) 
+      } catch (error) {
+        //  throw new Error(error)
+          return res.json({err:" Error sendeing messge",err:error.message})
+          
+      }
+     
+     
+     
+     
+     }
+
+     let DeleteMessage = (router)=>{
+      router.get('/api/chatline/delete', auth, asyncHandler(deleteMessageFunction) )
+       }  
+  
   
  
- module.exports  = {SendMessage,GetAllMessage}
+ module.exports  = {SendMessage,GetAllMessage,DeleteMessage}

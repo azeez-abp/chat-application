@@ -1,7 +1,7 @@
 
 async function removePeerFrom(channel) {
     if (!(channel in socket.channels)) {
-      console.log("[" + socket.id + "] [Warning] not in ", channel);
+    //  console.log("[" + socket.id + "] [Warning] not in ", channel);
       return;
     }
 
@@ -17,7 +17,7 @@ async function removePeerFrom(channel) {
     for (var id in channels[channel]) {
       await channels[channel][id].emit("removePeer", { peer_id: socket.id });
       await socket.emit("removePeer", { peer_id: id });
-      console.log("[" + socket.id + "] emit remove Peer [" + id + "]");
+     //console.log("[" + socket.id + "] emit remove Peer [" + id + "]");
     }
   }
 

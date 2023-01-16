@@ -7,7 +7,7 @@ const session = require('express-session')
 const cookie_parser  =require('cookie-parser')  
 const passport  =require('passport') 
 let PORT   = process.env.PORT || 7000
-console.log(process)
+//console.log(process)
 //console.log  (path.join(__dirname))
 
 var whitelist = [
@@ -61,12 +61,12 @@ app.use(cookie_parser());
 /// initalize passport to make stragy work
 //app.use(passport.session());
 //studentComponent(app)  
-app.use((req,res,next)=>{
-  // console.log(req.session)
-   //console.log(req.user)////passport-local user
-  // console.log(req.logout)
-  next()
-})
+// app.use((req,res,next)=>{
+//   // console.log(req.session)
+//    //console.log(req.user)////passport-local user
+//   // console.log(req.logout)
+//   next()
+// })
  
 //require('./Controllers/Student/Route')(app) 
 //app.use('/chat')
@@ -107,7 +107,7 @@ if (process.env.NODE_ENV === 'production') {
 //require('./Controllers/Chat/io').io1(5200)
 
 require(path.join(__dirname,'./Controllers/Chat/io') ).ioexpress(app).listen(PORT,()=>{
-  console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
+ // console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
 });
 
 

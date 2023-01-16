@@ -9,7 +9,6 @@ import {
     DrawerCloseButton,
     useDisclosure,
     Input,
-    Button,
     useToast,
   } from '@chakra-ui/react'
   import { useRef,useEffect,useState } from 'react'
@@ -18,27 +17,28 @@ import {
   import { GetToken } from '../../../Token/Token'
   import UserList from './UserList'
   import { DataStore } from '../../../Context/ChartProvider'
-  import { useNavigate } from 'react-router-dom'
+  //import { useNavigate } from 'react-router-dom'
 
-
+  import { app_domain_proxy } from '../../app_domain'
 
 
 
 
 export const Drawers =(Element,Child)=> {  
-const   history    =useNavigate()
+//   history    =useNavigate()
  const toast  = useToast()   
  const { isOpen, onOpen, onClose } = useDisclosure()
  const btnRef = useRef()
  const [hasFocus,setHasFocus]   = useState(false)
  const [searchItemLoaded, setSearchItemLoading ]  = useState(false)
  const {
-    user, setUser,
+   // user,
+     setUser,
     searchData, setSearchData,
-    selectedChat,setSelectedChat,
+ //   selectedChat,setSelectedChat,
     userInfo,
     chats,setChats,
-    alreadyInChat,setAlreadyInChat,
+   // alreadyInChat,setAlreadyInChat,
     setHasError,
     setIsLoading,
 
@@ -46,9 +46,9 @@ const   history    =useNavigate()
 
    const [notFound,setNotFound]  = useState('')
   
-   useEffect(()=>{
+  //  useEffect(()=>{
 
-   },[chats]) 
+  //  },[chats]) 
 
  const getData  = async (inp,setSearchItemLoadingCb,setNotFoundcb)=>{
     const options = {
@@ -61,7 +61,7 @@ const   history    =useNavigate()
         
         // body:  {userID:inp},
          data:  {search:inp[0]},
-        url:"/api/chat/getuser",
+        url:app_domain_proxy+"/api/chat/getuser",
       };
       try {
           let d  =await axios(options)
@@ -83,7 +83,7 @@ const   history    =useNavigate()
            }
          
       } catch (error) {
-        if(error.response.status==401){
+        if(error.response.status===401){
           getToast('EXPIRED SESSION','Login again',2000,'top-left')
         }
          
@@ -159,47 +159,47 @@ const   history    =useNavigate()
 
 
 
-  const fetchMyChatList = async (url)=>{
-    const options = {
-        method: 'POST',
-        headers: { 
-        //  'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer '+GetToken(),
-         },
+  // const fetchMyChatList = async (url)=>{
+  //   const options = {
+  //       method: 'POST',
+  //       headers: { 
+  //       //  'Content-Type': 'application/x-www-form-urlencoded',
+  //         'Content-Type': 'application/json',
+  //         'authorization': 'Bearer '+GetToken(),
+  //        },
         
-        // body:  {userID:inp},
-         data:  {userID:2133434132 },
-        url:"/api/chat/"+url,
-      };
-      try {
-          let d  =  await axios(options)
-         let out  = d.data
+  //       // body:  {userID:inp},
+  //        data:  {userID:2133434132 },
+  //       url:"/api/chat/"+url,
+  //     };
+  //     try {
+  //         let d  =  await axios(options)
+  //        let out  = d.data
 
            
-           if(out.chat.length>0){
-             const listChat  = [...out.chat] 
-             setChats(listChat)
+  //          if(out.chat.length>0){
+  //            const listChat  = [...out.chat] 
+  //            setChats(listChat)
 
             
-           }else{
+  //          }else{
             
-            setTimeout(()=>{
-              setUser([])   
-            },4000)
+  //           setTimeout(()=>{
+  //             setUser([])   
+  //           },4000)
             
              
-            //  setUser({})
-           }
+  //           //  setUser({})
+  //          }
          
-      } catch (error) {
+  //     } catch (error) {
         
-        setHasError({is_in:true,info:error.message })
-        setTimeout(()=>{setHasError({is_in:false,info:'' })},5000)
+  //       setHasError({is_in:true,info:error.message })
+  //       setTimeout(()=>{setHasError({is_in:false,info:'' })},5000)
          
-      }
+  //     }
      
-    }
+  //   }
         
  //////////////////////check user  lof=gin/////////////////////////////////////////////
   
@@ -268,7 +268,7 @@ const   history    =useNavigate()
                
               {searchItemLoaded && searchData.length>0? searchData.map((user,ind)=>
               {  
-                 if(user._id != userInfo._id){
+                 if(user._id !== userInfo._id){
                 return (<UserList
                  key  ={user.userId} 
                  user = {user}
@@ -277,7 +277,7 @@ const   history    =useNavigate()
               }
             }
               )  : hasFocus? <SearchData value={notFound} /*show skeleton*/ />:''}
-          </DrawerBody >
+          </DrawerBody>
           
           <DrawerFooter>
 

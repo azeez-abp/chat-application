@@ -1,13 +1,14 @@
-import React, {useEffect} from 'react'
+import React from 'react'
 import { Modals } from '../../Modal'
 import { Box ,useDisclosure} from '@chakra-ui/react'
 import { DataStore } from '../../../Context/ChartProvider'
+import { app_domain_proxy } from '../../app_domain'
 export default function DeleteChat({chat,requestMaker,notifier}) {
-    const {chats,setChats,setShowActionMenue}  = DataStore()
-    const {isClose, isOpen, onOpen, onClose } = useDisclosure()
+    // const {chats,setChats,setShowActionMenue}  = DataStore()
+    // const {isClose, isOpen, onOpen, onClose } = useDisclosure()
 
 const closeAction  = ()=>{
-    console.log("CLOSE")
+   // console.log("CLOSE")
 }
 
 const deleteOneChat  = (props)=>{
@@ -15,7 +16,7 @@ const deleteOneChat  = (props)=>{
 // the parent is Mychat
 
 
-  requestMaker('/api/chat/delete',{id:chat},(err,data)=>{
+  requestMaker(app_domain_proxy+'/api/chatline/delete',{id:chat},(err,data)=>{
         if(err){
             return notifier('Delete Error',err.message,'error');
         }
