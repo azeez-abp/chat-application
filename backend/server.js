@@ -11,14 +11,15 @@ console.log(process)
 //console.log  (path.join(__dirname))
 
 var whitelist = [
-'http://example1.com', 
-'http://example2.com', 
+//'http://example1.com', 
+//'http://example2.com', 
 'http://127.0.0.1:7000',
 '127.0.0.1:7000',
 'http://localhost:3000',
 'localhost:7000',
 'undefined',
-'https://abp-chat-app.herokuapp.com'
+'https://abp-chat-app.herokuapp.com',
+'https://embracechatapp.azurewebsites.net'
 ]
 var corsOptions = {
   origin: function (origin, callback) {

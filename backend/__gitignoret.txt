@@ -5,3 +5,27 @@ public
 view
 .ssh
 tgit
+git clone https://github.com/Azure-Samples/nodejs-docs-hello-world.git
+
+az webapp create --resource-group <group-name> --plan <plan-name> --name <app-name> --runtime "<runtime-flag>" --deployment-local-git
+
+az webapp create --resource-group Web_Service --plan "ASP-WebService-95bd" --name embracechatapp --runtime "NODE:16-lts" --deployment-local-git
+
+az webapp deployment source config-local-git --name <app-name> --resource-group <group-name>
+
+az webapp deployment source config-local-git --name embracechatapp --resource-group Web_Service
+/
+*the code above return 
+{
+  "url": "https://azeez@embracechatapp.scm.azurewebsites.net/embracechatapp.git"
+}
+ *
+/
+// go back to the local pc
+
+git remote add azure <url>
+git remote add azure "https://azeez@embracechatapp.scm.azurewebsites.net/embracechatapp.git"
+
+git push azure main:master
+
+az webapp list-runtimes --os-type linux
