@@ -11,14 +11,14 @@ import {
     Stack,
     FormControl,
     FormLabel,
-    FormErrorMessage,
-    FormHelperText,
+  //  FormErrorMessage,
+   // FormHelperText,
     Input,
-    useDisclosure,
-    List,
+   // useDisclosure,
+   // List,
     ListItem,
-    ListIcon,
-    OrderedList,
+   // ListIcon,
+   // OrderedList,
     UnorderedList,
   
   
@@ -29,13 +29,13 @@ import {GetToken} from './../../../Token/Token'
 import axios from 'axios'
 import { useToast } from '@chakra-ui/react'
 import { Modals } from '../../Modal'
-import { useState } from 'react'
+import { Fragment, useState } from 'react'
 import UserList from './UserList'
 //import { useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import DeleteChat from './DeleteChat'
 import {UpdateGroupChat} from './UpdateGroupChat'
-import { app_domain_proxy } from '../../app_domain'
+import { makeRequest } from '../../request'
 
 export const MyChat = ()=>{
   const [searchItemLoaded, setSearchItemLoading ]  = useState(false)
@@ -43,13 +43,13 @@ export const MyChat = ()=>{
   const [hasNotBeenSeleted,sethasNotBeenSeleted ]  = useState({})
   const [userSelectedForGroupChat,setNotUserSelectedForGroupChat]  = useState([])
   const [groupName, setGroupNamef]  = useState('')
-
-  const [coor,setCoor]  = useState({})
+  const [hasBeenRemove,setHasBeenRemove]  = useState([])
+ // const [coor,setCoor]  = useState({})
   const {user,setUser,searchData, setSearchData,selectedChat,setSelectedChat,chats,setChats,hasError,
   setHasError ,userInfo,isLoading,setIsLoading,SearchData,showActionMenue,setShowActionMenue
   }   = DataStore()
     
-  const { isOpen, onOpen, onClose } = useDisclosure()
+  //const { isOpen, onOpen, onClose } = useDisclosure()
   const toast  = useToast()
   const history = useNavigate()
 
@@ -69,49 +69,6 @@ export const MyChat = ()=>{
        //} 
    }
 
-
-
-
-  const makeRequest = async (url,data,cb,mtd=null)=>{
-    const options = {
-        method: mtd?mtd:'POST',
-        headers: { 
-        //  'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer '+GetToken(),
-         },
-        
-        // body:  {userID:inp},
-         data:  data,
-        url:url,
-      };
-      try {
-          let d  =  await axios(options)
-         let out  = d.data
-           if(out.err){
-            return cb({message:out.err,isArr:typeof out.err=='object'?true:false},null)
-           }
-             cb(null,out)  
-
-
-      } catch (error) {
-        cb(error,null)
-        setTimeout(()=>{
-          if(error.hasOwnProperty('request')){
-            if(error.request.status==401){
-              history('/')
-            }
-          }
-        },5200)
-        
-        
-       
-      }
-
-
-    }
-        
- 
 
 
    const addToGroup  = (data)=>{
@@ -150,64 +107,31 @@ export const MyChat = ()=>{
      setGroupNamef(ev.target.value);
  }  
 const handleGroupNameInputChange = (ev)=>{
-        setInputValue(ev.target.value)
-
- const getData  = async ()=>{
-  const options = {
-      method: 'POST',
-      headers: { 
-      //  'Content-Type': 'application/x-www-form-urlencoded',
-        'Content-Type': 'application/json',
-        'authorization': 'Bearer '+GetToken(),
-       },
+ 
+  makeRequest("/api/chat/getuser",{search:ev.target.value},(err,data)=>{
+      if(err){
+        return  getToast('Validation Error','Reload the page, there is error getting your user','error',5000,'top')
+      }else{
       
-      // body:  {userID:inp},
-       data:  {search:ev.target.value},
-      url:app_domain_proxy+"/api/chat/getuser",
-    };
-    try {
-        let d  =await axios(options)
-       let out  =d.data
-       
-         if(out.users.length>0){
-           const userSearch =out.users 
+        if(data.users.length>0){
+                     const userSearch =data.users 
+                     setSearchData(userSearch)
+                   }else{
+                    setTimeout(()=>{
+                     setSearchData([])   
+                    },4000)
+                  }
+      }
+  },"POST")
 
-           setSearchData(userSearch)
-          // setSearchItemLoading(true)
-       
-         }else{
-          //setNotFound(inp[0]+" not found")
-          setTimeout(()=>{
-           setSearchData([])   
-          },4000)
-          
-           
-          //  setUser({})
-         }
-       
-    } catch (error) {
-    
-      setTimeout(()=>{
-        if(error.hasOwnProperty('request')){
-          if(error.request.status==401){
-           getToast("Session Error","Session expired","error",5000,"top")
-          }
-        }
-      },5200)
-
-    }
-   
- }
-
- getData()
 
    }
 
 
 
-   const   submitAddGroup  = ()=>{
+   const   submitAddGroup  = (preAction,postAction)=>{
     setIsLoading(true)
-
+   
       if(userSelectedForGroupChat.length < 1){
         setIsLoading(false)
        return  getToast('Validation Error','Select user to add to group','error',5000,'top')
@@ -217,8 +141,8 @@ const handleGroupNameInputChange = (ev)=>{
         setIsLoading(false)
         return  getToast('Validation Error','Group name is required','error',5000,'top')
        }
-   
-      makeRequest(app_domain_proxy+'api/chat/addgroup',{users:userSelectedForGroupChat,name:groupName},(err,data)=>{
+       preAction()
+      makeRequest('/api/chat/addgroup',{users:userSelectedForGroupChat,name:groupName},(err,data)=>{
              if(err){
               setIsLoading(false)
               return getToast('Error Occure',err.message,'error',5000,'top')
@@ -229,7 +153,7 @@ const handleGroupNameInputChange = (ev)=>{
               getToast('Success',data.suc,'success',5000,'top')
               setGroupNamef('')
               setChats([...chats,data.groupChat])
-              window.location.reload();
+              postAction()
              }
 
 
@@ -244,7 +168,7 @@ const handleGroupNameInputChange = (ev)=>{
  
 
    const goToChatRoom  = (selectedChat)=>{
-
+   // open chat where user start to type messagebv
      setIsLoading(true)
     setSelectedChat([selectedChat])
     setTimeout(()=>{setIsLoading(false);setShowActionMenue({...showActionMenue,[selectedChat._id]:false})},2000
@@ -347,8 +271,17 @@ const getCoordinate  = event=>{
                                   onChange={handleGroupNameInputChange }
                                   />
 
+                         
+
+                 <Box
+                  maxHeight={"200px"}
+                  overflowY= {"auto"} 
+                  className="list-of-search-user-to-be-added-to-group"
+                >
+
                       {searchData.length>0? searchData.map((user,ind)=>
-                        {  
+                        { 
+                         // console.log(userSelectedForGroupChat,user._id)
                           if(user._id != userInfo._id){
                           return (
                          /*The tag for list of  searched user */   
@@ -359,14 +292,18 @@ const getCoordinate  = event=>{
                           color  = { ( hasNotBeenSeleted.hasOwnProperty(user._id)&& hasNotBeenSeleted[user._id]==false)?'#ffffff':'#000000'}
                           title  = { ( hasNotBeenSeleted.hasOwnProperty(user._id)&& hasNotBeenSeleted[user._id]==false)?user.fn+ ' has been selected':user.fn+' has been removed'}
                         
-                          handleFunction  = {()=>{addToGroup({userId1:user.userId,userId2:user._id})} } 
+                         handleFunction  = {()=>{  addToGroup({userId1:user.userId,userId2:user._id })} } 
+                        //handleFunction = {(cb)=>{cb(addToGroup,{userId1:user.userId,userId2:user._id },userSelectedForGroupChat)}}
+                        hasSelected = {userSelectedForGroupChat.indexOf(user._id)!== -1?true:false}
                         />)
                         }
                       }
                         ):inputValue?<Text color={"tomato"} fontWeight={"700"}>{inputValue+" Not found"}</Text> :"" }
-                                          {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
-                                        </FormControl>
-                                        </>
+                              
+               </Box>                           {/* <FormHelperText>We'll never share your email.</FormHelperText> */}
+
+        </FormControl>
+    </>
                                         ,
                                         <>
                                         Add New Group
@@ -393,20 +330,30 @@ const getCoordinate  = event=>{
 
 
      
-              {
+   {/* ====================================================================================
+     ======================================================================================
+   
+    */}
+
+
+          
+    {
                 chats.length>0?<>
                 {/* List of chat */}
                 <VStack w={"100%"}>
-                { (chats.length>0) && chats.map((chat,ind)=>{
-
-                          
-
+                { (chats.length>0) && chats.map((chat,k)=>{
+                  let admins  = [];
+                  chat.groupAdmin.forEach(admin => {
+                     admins.push(admin._id)
+                   });
+           
                    return (
-                   <>
+                   <Fragment key={k}>
                      {
                   
-                     
-                   (chat.users.length>1) &&  (<Box 
+                   (chat.users.length>1) &&  (
+                    <Box 
+                    key= {Math.random()}
                       
                     cursor={"pointer"}
                     bg  = {(selectedChat.length>0 && selectedChat[0]._id===chat._id) ? "#38B2AD":"#E8E8E8"}
@@ -414,7 +361,6 @@ const getCoordinate  = event=>{
                     px={3}
                     py={3}
                     borderRadius={"lg"} 
-                    key= {ind}
                     display="flex"
                     width={"100%"}
                    // onMouseDown = {leftClickMenuShow}
@@ -489,15 +435,32 @@ const getCoordinate  = event=>{
                                (<UnorderedList className='action-menue'
                                //top={coor.y+"px"}
                                >
-                                    <ListItem 
+
+                                 { (chat.isGroupChat ===   true  &&  admins.indexOf(userInfo._id) !== -1) ? /*if is 
+                                 group chat, only admin member can delete the chat*/
+                                  (<ListItem 
                                        w={{base:"100%",md:"30%"}}
                                     >
-                                      <DeleteChat 
+                                  <DeleteChat 
+                                       chat={chat}
+                                      // setMeDeleted  = {(id)=>setHasBeenRemove([...hasBeenRemove,id])}
+                                       requestMaker= {makeRequest}
+                                       notifier={getToast}> 
+                                     </DeleteChat>
+                                    </ListItem>)
+                                    :(
+                                      <ListItem 
+                                       w={{base:"100%",md:"30%"}}
+                                    >
+                                  <DeleteChat 
                                        chat={chat}
                                        requestMaker= {makeRequest}
                                        notifier={getToast}> 
-                                       </DeleteChat>
-                                    </ListItem >
+                                     </DeleteChat>
+                                    </ListItem>
+                                    )
+
+                                 }
                                      {chat.isGroupChat?
                                      <ListItem>
                                       <UpdateGroupChat 
@@ -510,7 +473,9 @@ const getCoordinate  = event=>{
                                         resetActionMenue  = {resetActionMenue}
                                        />  </ListItem>:""}
 
-                                    <ListItem  onClick={()=>{goToChatRoom(chat)} } >Star chatting</ListItem>
+                                    <ListItem  onClick={()=>{goToChatRoom(chat)} } >
+                                    Star chatting
+                                    </ListItem>
                                     
                                     </UnorderedList>
                                     ) 
@@ -522,11 +487,29 @@ const getCoordinate  = event=>{
                    </Box> )
                 }  
                 
-               </>)
+               </Fragment>)
                 }) 
                   }
               </VStack></>:""
               }
+
+
+    {/* =======================================================================================
+    ====================================================================================
+     */}
+
+
+
+
+
+
+
+
+
+
+
+
+
               
 
 

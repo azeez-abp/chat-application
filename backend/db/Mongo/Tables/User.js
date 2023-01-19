@@ -20,5 +20,5 @@ const schema = {
     
 
 }
-
+//usersDb.populate(objectReturnFromDBQuery,{path:'db that ref usersDb.column with ref', select:' col1,col2'}) use this for table(document) with no ref 
 module.exports  = schema;

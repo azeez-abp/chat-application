@@ -17,14 +17,14 @@ import { GetToken } from '../../../Token/Token'
 import axios from 'axios'
 import MessageBody from './MessageBody'
 import {io} from 'socket.io-client'
-import { app_domain_proxy } from '../../app_domain'
+import { makeRequest } from '../../request'
 
 export default function SingleChat({getMyChatList}) {
     const [viewSelectedChatProfile,setViewSelectedChatProfile]    =useState(false)
 
      
     const  [newMessage,setNewMessage]    = useState ('')
-    const  [hasConnected,setHasConnected]    = useState (false)
+    const  [hasJoied,setHasJoined]    = useState (false)
     const  [typingIn,setTypingIn]    = useState (false)
     let  [enterCount,setEnterCount]  = useState(0)
     const history = useNavigate()
@@ -45,10 +45,21 @@ export default function SingleChat({getMyChatList}) {
 //       console.log(error)
 //     }
 
-let socket  = io('ws://localhost:7000')
+//let socket  = io('ws://localhost:7000')
 
-
+let socket  = io('/'/*backend url*/,{pingTimeout: 60000})
   
+const userHasJoied = ()=>{
+  socket.on('user-enter',(user_)=>{
+    if(user_._id != userInfo._id && enterCount===0){
+        setTypeValue(`${user_.fn} just enter the room `)
+        enterCount  = enterCount+1
+       setEnterCount(enterCount)
+    }
+   })
+
+}
+
 
     useEffect(
   
@@ -57,8 +68,6 @@ let socket  = io('ws://localhost:7000')
     ///////////////////////////////////////////
  if(selectedChat.length>0){/////listed peopleyou chat with at the sidebar
     socket.on('connect',()=>{
-      //////////////////////////////everything in s
-     setHasConnected(true)
       selectedChat.length>0 && socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
 
     })
@@ -66,14 +75,7 @@ let socket  = io('ws://localhost:7000')
     /////////////////////////////////////////////
   
    ///////////////////////////////////////////////////////////
-   socket.on('user-enter',(user_)=>{
-    if(user_._id != userInfo._id && enterCount===0){
-        setTypeValue(`${user_.fn} just enter the room `)
-        enterCount  = enterCount+1
-       setEnterCount(enterCount)
-    }
-   })
-
+ 
    if(typingIn){
      socket.emit('is-typing', userInfo);
    }
@@ -102,45 +104,6 @@ let socket  = io('ws://localhost:7000')
     
 
 
-    const makeRequest = async (url,data,cb,mtd=null)=>{
-      const options = {
-          method: mtd?mtd:'POST',
-          headers: { 
-          //  'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer '+GetToken(),
-           },
-          
-          // body:  {userID:inp},
-           data:  data,
-          url:app_domain_proxy+ url,
-        };
-        try {
-            let d  =  await axios(options)
-           let out  = d.data
-             if(out.err){
-              return cb({message:out.err,isArr:typeof out.err=='object'?true:false},null)
-             }
-               cb(null,out)  
-  
-  
-        } catch (error) {
-          cb(error,null)
-          setTimeout(()=>{
-            if(error.hasOwnProperty('request')){
-              if(error.request.status==401){
-                history('/')
-              }
-            }
-          },5200)
-          
-          
-         
-        }
-  
-  
-      }
-          
    
   useEffect(()=>{
     let isApiSubscribed =true
@@ -374,7 +337,7 @@ const userStopTyping  = ()=>{
              borderLeft={"2px solid #e3e3e3"}
              onClick={sendMessage}
           
-            children={ <svg color="white" viewBox="0 0 32 32" aria-hidden="true" class="e5ibypu0 lc-di14ft"><path d="M6.4,5.6l21,9.5c0.5,0.2,0.7,0.8,0.5,1.3c-0.1,0.2-0.3,0.4-0.5,0.5l-21,9.5  c-0.5,0.2-1.1,0-1.3-0.5c-0.1-0.3-0.1-0.6,0-0.8L8.6,18L20.5,16L8.6,14.1L5.1,6.9c-0.2-0.5,0-1.1,0.5-1.3C5.8,5.5,6.1,5.5,6.4,5.6z"></path></svg>}
+            children={ <svg color="white" viewBox="0 0 32 32" aria-hidden="true" className="e5ibypu0 lc-di14ft"><path d="M6.4,5.6l21,9.5c0.5,0.2,0.7,0.8,0.5,1.3c-0.1,0.2-0.3,0.4-0.5,0.5l-21,9.5  c-0.5,0.2-1.1,0-1.3-0.5c-0.1-0.3-0.1-0.6,0-0.8L8.6,18L20.5,16L8.6,14.1L5.1,6.9c-0.2-0.5,0-1.1,0.5-1.3C5.8,5.5,6.1,5.5,6.4,5.6z"></path></svg>}
           />
          </InputGroup>
            </FormControl>

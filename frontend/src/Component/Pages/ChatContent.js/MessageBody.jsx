@@ -1,5 +1,4 @@
 import { Avatar, Box, Tooltip } from '@chakra-ui/react'
-import { m } from 'framer-motion'
 import React from 'react'
 import ScrollableFeed from 'react-scrollable-feed'
 import { DataStore } from '../../../Context/ChartProvider'
@@ -7,7 +6,6 @@ import { isSameSender,isLastMessage } from '../../SomeFunctions'
 
 function MessageBody({messages}) {
     const {userInfo}  = DataStore()
-
   return (
     <ScrollableFeed  forceScroll={true} style={{maxHeght:"90vh"}}> 
          <div 
@@ -19,7 +17,7 @@ function MessageBody({messages}) {
             
                  }}>
     { messages && messages.map( (message, i) => (
-                <p key={message._id} style={{marginBottom:"3px"}}>
+                <p className='p-message-container' key={message._id} style={{marginBottom:"3px"}}>
              
                  {( message.sender._id !==userInfo._id ) ?<>
                     <Box 
@@ -39,7 +37,7 @@ function MessageBody({messages}) {
 
                       </Avatar>
                     </Tooltip> 
-                    <Box>
+                    <Box className='message-conent' wordBreak={'break-all'}>
                         {message.content}
                     </Box>
                    </Box> 
@@ -56,6 +54,7 @@ function MessageBody({messages}) {
                     borderRadius={"4px"}
                     fontWeight={600}
                     m={" 0px 0 0 0px"}
+                    wordBreak={'break-all'}
                  >
                  {message.content}
              </Box> }

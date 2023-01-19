@@ -1,4 +1,4 @@
-import React,{useState} from 'react'
+import React,{Fragment, useState} from 'react'
 import { Modals } from '../../Modal'
 import { Button,Avater,Box ,FormControl, Input,FormLabel,Text,  Tag,
   TagLabel,
@@ -22,8 +22,9 @@ export const UpdateGroupChat  = ({title,style,getToast, chat,makeRequest,resetAc
   const [selectedUsersIds,setSelectedUsersIds ]  = useState([])
   const [userSelectedForGroupChat,setUserSelectedForGroupChat]  = useState([])
   const [groupName, setGroupNamef]  = useState('')
+  const [searchData, setSearchData]  = useState([])
   const groupNameValue  = useRef()
-  const {user,setUser,searchData, setSearchData,selectedChat,setSelectedChat,chats,setChats,hasError,
+  const {user,setUser,selectedChat,setSelectedChat,chats,setChats,hasError,
     setHasError ,userInfo,isLoading,setIsLoading,SearchData,showActionMenue,setShowActionMenue,
     message,setMessage
     }   = DataStore()
@@ -44,56 +45,22 @@ useEffect(()=>{
     setGroupNamef(ev.target.value);
 }  
 const handleGroupNameInputChange = (ev)=>{
-       setInputValue(ev.target.value)
-
-const getData  = async ()=>{
- const options = {
-     method: 'POST',
-     headers: { 
-     //  'Content-Type': 'application/x-www-form-urlencoded',
-       'Content-Type': 'application/json',
-       'authorization': 'Bearer '+GetToken(),
-      },
-     
-     // body:  {userID:inp},
-      data:  {search:ev.target.value},
-     url:"/api/chat/getuser",
-   };
-   try {
-       let d  =await axios(options)
-      let out  =d.data
       
-        if(out.users.length>0){
-          const userSearch =out.users 
-          
-          setSearchData(userSearch)
-         // setSearchItemLoading(true)
-      
+       makeRequest("/api/chat/getuser",{search:ev.target.value},(err,data)=>{
+        if(err){
+          //\return  getToast('Validation Error','Reload the page, there is error getting your user','error',5000,'top')
         }else{
-         //setNotFound(inp[0]+" not found")
-         setTimeout(()=>{
-          setSearchData([])   
-         },4000)
-         
-          
-         //  setUser({})
-        }
       
-   } catch (error) {
-   
-     setTimeout(()=>{
-       if(error.hasOwnProperty('request')){
-         if(error.request.status==401){
-          getToast("Session Error","Session expired","error",5000,"top")
-         }
-       }
-     },5200)
-     //
-   }
-  
-}
-
-getData()
+          if(data.users.length>0){
+                       const userSearch =data.users 
+                    setSearchData([...userSearch])
+                     }else{
+                    
+                     setSearchData([])   
+                     
+                    }
+        }
+    },"POST")
 
   }
 
@@ -132,7 +99,7 @@ const addToGroup  = (data)=>{
 
 const fetchChatsMessages  = async ()=>{
   setIsLoading(true)
-await  makeRequest(app_domain_proxy+'/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
+await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
 if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
 
 if(data.suc) setMessage(data.message) ;setIsLoading(false)
@@ -140,7 +107,7 @@ if(data.suc) setMessage(data.message) ;setIsLoading(false)
 
 }
 
-const  updateGroup  = ()=>{
+const  updateGroup  = (preAction,postAction)=>{
  
  
    let ids_  = []
@@ -161,7 +128,8 @@ const  updateGroup  = ()=>{
 setIsLoading(true)
 setTimeout(()=>{
 
-  makeRequest(app_domain_proxy+'/api/chat/updategroup',data,(err,data2)=>{
+  preAction()
+  makeRequest('/api/chat/updategroup',data,(err,data2)=>{
     if(err){
       setIsLoading(false)
       return getToast('Reqest Error', err.message,'error')
@@ -174,7 +142,8 @@ setTimeout(()=>{
       setIsLoading(false)
       getToast('Reqest success', 'update successful' ,'success')
         setShowActionMenue({...showActionMenue,[data.groupChatId]:false })
-          document.querySelector(".modal--btn--update").click()  
+        postAction()
+       //   document.querySelector(".modal--btn--update").click()  
     }
 
 },'PUT')
@@ -212,7 +181,10 @@ const openProfilePane =()=>{
                              
                                
                                     { 
-                                      chat.groupAdmin.map(admin=>admin._id==userInfo._id? (<> 
+                                      chat.groupAdmin.map( (admin,i)=>admin._id==userInfo._id? (
+                                        /////////////////////////////////////////////////
+                                        //////////////////////////////////////////////////
+                                      <Fragment key={i}> 
                                       <FormLabel>Enter Group Name</FormLabel>
                                       <Input  
                                         type='text' 
@@ -229,7 +201,7 @@ const openProfilePane =()=>{
                                          placeholder="Find user to add to group"
                                          onChange={handleGroupNameInputChange }
                                          />
-                                      </>): (<>You are not the admin</>))
+                                      </Fragment>): (<>You are not the admin</>))
                                 
                                     }
                                     
@@ -241,13 +213,13 @@ const openProfilePane =()=>{
                                   
                                         {
                                         // setUserSelectedForGroupChat()
-                                        userSelectedForGroupChat.map((user) => {
+                                        userSelectedForGroupChat.map((user,i) => {
                                               
                                           return(
                                           <Tag
                                             size={"md"}
                                             w={"50%"}
-                                            key={user._id}
+                                            key={i}
                                             borderRadius='full'
                                             variant='solid'
                                             colorScheme='green'
@@ -255,14 +227,14 @@ const openProfilePane =()=>{
                                           >
                                             <TagLabel  key={user._id}>{user.fn}  
                                              {
-                                             chat.groupAdmin.map(admin=>admin._id==user._id?"  is Admin":"  is Member")
+                                             chat.groupAdmin.map((admin,k)=>admin._id==user._id?"  is Admin":"  is Member")
                                         
                                              }
                                             </TagLabel>
                                             {
-                                             chat.groupAdmin.map(admin=>( (admin._id==userInfo._id) )? (<>   <TagCloseButton  key={user._id} title='Remove this user' onClick={ ()=>{removeFromGroup(user)} }/>
-                                             </>):(<>{user._id==userInfo._id ?(<> <TagCloseButton  key={user._id} title='Exit from the group' onClick={ ()=>{removeFromGroup(user)} }/>
-                                            </>):''  }</>))
+                                             chat.groupAdmin.map( (admin,i)=>( (admin._id==userInfo._id) )? (<Fragment key={i}>   <TagCloseButton  key={user._id} title='Remove this user' onClick={ ()=>{removeFromGroup(user)} }/>
+                                             </Fragment>):(<Fragment key={i}>{user._id==userInfo._id ?(<Fragment key={i}> <TagCloseButton  key={user._id} title='Exit from the group' onClick={ ()=>{removeFromGroup(user)} }/>
+                                            </Fragment>):''  }</Fragment>))
                                         
                                              }
                                            
@@ -274,7 +246,7 @@ const openProfilePane =()=>{
                         {  
                           if(user._id != userInfo._id){
                           return (<UserList
-                          key  ={user.userId} 
+                          key  ={ind} 
                           user = {user}
                           bg  = {'#E8E8E8'}
                           color  = { '#000000'}

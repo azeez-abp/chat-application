@@ -1,9 +1,9 @@
 import { Avatar, Box ,Text} from '@chakra-ui/react';
-import React from 'react'
-export default function UserList({user,handleFunction,bg,color,title}) {
+import React, { useState } from 'react';
+import { CheckIcon } from '@chakra-ui/icons';
+export default function UserList({user,handleFunction,bg,color,title,hasSelected}) {
 
-
-
+console.log(hasSelected,"SELECTED")
 
   return (
     <Box
@@ -23,6 +23,7 @@ export default function UserList({user,handleFunction,bg,color,title}) {
       overflowX={"hidden"}
       borderRadius={"lg"}
       title={title?title:''} 
+      position={"relative"}
     >
         <Avatar
           mr={2}
@@ -37,6 +38,14 @@ export default function UserList({user,handleFunction,bg,color,title}) {
         <Box>
               <Text>Name: {user.fn} </Text>
               <Text><b>Email: {user.email}</b> </Text>
+    
+              {hasSelected&&<CheckIcon 
+                 position={"absolute"}
+                 right={"10px"}
+                 top={"23px"}
+                 borderRadius={"100%"}
+                 background={"#000"}
+               />}
         </Box>
 
     </Box>

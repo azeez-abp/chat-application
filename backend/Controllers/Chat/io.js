@@ -11,20 +11,33 @@ for (var k in interfaces) {
     }
 }
 
-//console.log(addresses);//
+
 const io1  = (port)=>{
   
-    const io = require('socket.io')(port,{
-   
-      cors:{
-        //origin:['http://localhost:3000','https://embracechatapp.azurewebsites.net/']
-        origin: addresses
 
-      }
-    })
+  const io = require('socket.io')(port, {
+    cors: {
+        origin: addresses,//"http://localhost:3000",
+        methods: ["GET", "POST"],
+        transports: ['websocket', 'polling'],
+        credentials: true
+    }, 
+    allowEIO3: true
+});
+  
+    // const io = require('socket.io')(port,{
+   
+    //   cors:{
+    //     //origin:['http://localhost:3000','https://embracechatapp.azurewebsites.net/']
+    //     origin: addresses
+
+    //   }
+    // })
+
+    
 
     io.on('connection',(client)=>{
-      console.log("IO STARTED2",client.id)
+      //console.log("IO STARTED2",client.id)
     })
   //console.log("IO STARTED")
   
@@ -71,7 +84,7 @@ const io1  = (port)=>{
            })           
              listner.typingEvent( io_backend,'is-typing')
              listner.newMessageSendEvent(io_backend)
-          console.log('connected room(socket==client) ',io_backend.id )
+          //console.log('connected room(socket==client) ',io_backend.id )
 
             ////////////////////////////////////////////////////////////////*************** //
 

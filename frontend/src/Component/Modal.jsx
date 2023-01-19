@@ -8,9 +8,11 @@ import {
     ModalCloseButton,
     useDisclosure,
     Button,
+    Spinner
   } from '@chakra-ui/react'
 
-  import React from 'react'
+  import React,{ useState }  from 'react'
+
   import { DataStore } from '../Context/ChartProvider'
   
 
@@ -31,11 +33,23 @@ import {
      elementClass={}
 
      )=> {
-
+      
  
       const { isOpen, onOpen, onClose } = useDisclosure()
       const  {isLoading}   = DataStore()
+      const [state,setState] = useState({
+        submitButtonDisabled:false,
+        spinnerShow:false
+      })
      
+     const preSubmitEvent = ()=>{
+        setState({...state,submitButtonDisabled:true, spinnerShow:true})
+     }
+       
+    const postSubmitEvent = ()=>{
+      setState({...state,submitButtonDisabled:false, spinnerShow:false})
+      onClose()
+    }   
     return (
       <> 
        <Element  className = {elementClass.class1?elementClass.class1:"modal--btn"} style={styles?styles:{}} as={Button} _hover={{bg:"rgba(22,22,22,.4)"}} onClick={onOpen}>
@@ -53,8 +67,23 @@ import {
           {showFooter && (
             <ModalFooter>
              <>
-               <Button  className = {elementClass.class3?elementClass.class3:"modal--btn3"} colorScheme='ghost' bg={"#000"} mr={3} onClick={closeAction?closeAction: onClose}>Close</Button>
-                {submitEvent &&  <Button variant='ghost' isLoading={isLoading} onClick={submitEvent} > { submitButtonTextValue? submitButtonTextValue:" Seconadry  Action"}</Button>}
+               <Button  className = {elementClass.class3?elementClass.class3:"modal--btn3"} colorScheme='ghost' bg={"#000"} mr={3} onClick={closeAction?()=>{closeAction(onClose)}: onClose}>Close
+               </Button>
+
+            {submitEvent && 
+             <Button disabled={state.submitButtonDisabled} variant='ghost' isLoading={isLoading} onClick={()=>{submitEvent(preSubmitEvent,postSubmitEvent)} } > 
+            
+            { submitButtonTextValue? submitButtonTextValue:" Seconadry  Action"}
+             {state.spinnerShow && <Spinner
+                thickness='4px'
+                speed='0.63s'
+                emptyColor='gray.200'
+                color='blur.500'
+                size='sm'
+              />
+             }
+            </Button>
+            }
              
               </>
             </ModalFooter>) } 
