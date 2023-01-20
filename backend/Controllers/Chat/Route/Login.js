@@ -29,7 +29,7 @@ let Login = (router)=>{
             let user  = await mongoStudentModel.findOne({ email:req.body.email
              
              },'userId pa email _id')
-          
+           
            if(!user) return res.json({err:["invalid credential not found"]})  
            
            let match = await bcrypt.compare(req.body.password,user.pa )

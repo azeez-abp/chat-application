@@ -1,6 +1,6 @@
 import {useState } from 'react'
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { makeRequest } from '../request';
 
 import {
     FormControl,
@@ -15,7 +15,8 @@ import {
   } from '@chakra-ui/react'
 
 import  { SaveToken,CHAT_LOGIN_STATUS } from '../../Token/Token';  
-import { app_domain_proxy } from '../app_domain';
+
+
 
 
 export const Login = (props)=> {   
@@ -71,58 +72,39 @@ export const Login = (props)=> {
   
   const sendLoginCredential   =  async(credential)=>{
       setLoading(true)
-      const options = {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json',
-                   // 'authorization':'Bearer '+GetToken() 
-                   
-                 },
-        data: credential,
-        url:app_domain_proxy+'/api/chat/post-login',
-      };
-    
-      try {  
-         let d  = await axios(options)
-         // let d  = await axios.post("/api/chat/post-register",formData,options)
-         
-          let out   = d.data
-        
-         if(out.suc){ 
-           SaveToken(out.access_token)
-          setLoading(false) 
-          getToast('Login successful')
-         localStorage.setItem(CHAT_LOGIN_STATUS,true)
-          setTimeout(()=>{
-            history('/chats')
-          },3100)
-         }else{  
-            setLoading(false) 
-           
-            out.err.forEach((er,i)=>{
-               let  time  = (i+1)*1000
-              getToast('Login Failed',er,'error',3000+time)
-             
-           })
-         
+   
+      await  makeRequest('/api/chat/post-login',{...credential},(err, out)=>{
+        if(err){
+          setLoading(false)
+          getToast('Login Failed',err.message[0],'error',3000)
+           console.log(err," IS ERROR LOGIN.JS",)
+           return false
+        }
 
-           
-         }
+        if(out.suc){ 
+          SaveToken(out.access_token)
+         setLoading(false) 
+         getToast('Login successful')
+        localStorage.setItem(CHAT_LOGIN_STATUS,true)
+         setTimeout(()=>{
+           history('/chats')
+         },3100)
+        }else{  
+           setLoading(false) 
+           out.err.forEach((er,i)=>{
+              let  time  = (i+1)*1000
+             getToast('Login Failed',er,'error',3000+time)
+          }) 
+        }
+        },'POST' )
 
-
-      } catch (error) {
-        setLoading(false)
-        getToast('Login Failed',error.message,'error',3000)
-         console.log(error," IS ERROR",error.message)
-      }
-
-    
 
 
 
    }
-  const generateGuestCredential = ()=>{
+  // const generateGuestCredential = ()=>{
 
-  }
+  // }
 
 
     return (
@@ -190,7 +172,7 @@ export const Login = (props)=> {
            colorScheme='red'
             variant='outline'
              mt={10} float="left"
-            onClick ={generateGuestCredential}
+         //   onClick ={generateGuestCredential}
              >
           Generate short time token
         </Button>

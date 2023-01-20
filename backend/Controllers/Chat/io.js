@@ -1,3 +1,17 @@
+// import { readFileSync } from "fs";
+// import { createServer } from "https";
+// import { Server } from "socket.io";
+
+// const httpsServer = createServer({
+//   key: readFileSync("/path/to/server-key.pem"),
+//   cert: readFileSync("/path/to/server-cert.pem"),
+//   requestCert: true,
+//   ca: [
+//     readFileSync("/path/to/client-cert.pem")
+//   ]
+// });
+
+
 const listner   = require('./ioListner')
 var os = require('os');
 var interfaces = os.networkInterfaces();
@@ -17,10 +31,11 @@ const io1  = (port)=>{
 
   const io = require('socket.io')(port, {
     cors: {
-        origin: addresses,//"http://localhost:3000",
+        origin: "http://localhost:7000",// addresses,,
         methods: ["GET", "POST"],
         transports: ['websocket', 'polling'],
-        credentials: true
+        credentials: true,
+        pingTimeout: 60000
     }, 
     allowEIO3: true
 });

@@ -13,8 +13,8 @@ import React, { useState,useEffect } from 'react'
 import { DataStore } from '../../../Context/ChartProvider'
 import SelectedChatProfile from './SelectedChatProfile'
 import { useNavigate  } from 'react-router-dom'
-import { GetToken } from '../../../Token/Token'
-import axios from 'axios'
+// import { GetToken } from '../../../Token/Token'
+// import axios from 'axios'
 import MessageBody from './MessageBody'
 import {io} from 'socket.io-client'
 import { makeRequest } from '../../request'
@@ -45,10 +45,29 @@ export default function SingleChat({getMyChatList}) {
 //       console.log(error)
 //     }
 
-//let socket  = io('ws://localhost:7000')
 
-let socket  = io('/'/*backend url*/,{pingTimeout: 60000})
-  
+  //let socket  = io('ws://localhost:7000')
+
+  //let socket  = io('/')
+
+let socket  = io('http://localhost:7000'/*backend url*/,
+
+{
+ // origin: "http://localhost:",
+  methods: ["GET", "POST"],
+  transports: ['websocket', 'polling'],
+  credentials: true,
+  pingTimeout: 60000
+}
+)
+socket.on("connect_error", () => {
+  setTimeout(() => {
+    socket.connect();
+  }, 1000);
+});
+// socket.engine.on("2222222connection_error", (err) => {
+//   console.log(err);
+// });
 const userHasJoied = ()=>{
   socket.on('user-enter',(user_)=>{
     if(user_._id != userInfo._id && enterCount===0){

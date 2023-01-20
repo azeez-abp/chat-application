@@ -101,7 +101,6 @@ const fetchChatsMessages  = async ()=>{
   setIsLoading(true)
 await  makeRequest('/api/chatline/getallmessages/'+selectedChat[0]._id,{},(err, data)=>{
 if(err) return getToast('Message Sending Error',err.message,'error',4000,'top');setIsLoading(false)
-
 if(data.suc) setMessage(data.message) ;setIsLoading(false)
 },'GET' )
 

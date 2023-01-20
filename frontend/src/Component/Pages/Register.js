@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import axios from 'axios';
 import {
     FormControl,
     FormLabel,
@@ -15,11 +14,11 @@ import {
     Flex,
     Badge,
     useToast,
-    TagLabel,
+  //  TagLabel,
    
   
   } from '@chakra-ui/react'
-import { useEffect } from 'react';
+import { makeRequest } from '../request';
 
 
 
@@ -28,7 +27,7 @@ import { useEffect } from 'react';
 
 
 export const Register = (props)=> {
-       console.log(props," REG PROP")
+       
      const toast = useToast()
      const [doneData,setDoneData ]  = useState({done:false,image_url:'/images/pgL3zHNECoaXZX4AkxmvuIkM17Iewa8I.png',user_name:''})
 
@@ -52,7 +51,7 @@ export const Register = (props)=> {
        e.preventDefault()
         
         let v= ( e.target.files!==null)?e.target.files[0]:e.target.value
-        ///console.log(v)
+        ///
         setInput({...input,[e.target.name]:v})
     } 
 
@@ -78,7 +77,7 @@ const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
         let err  = [false];
         for(let inp in input){
 
-           // console.log(input[inp], typeof input[inp]," TYPE")
+           // 
          if(inp !=='image'){
               if(input[inp]===''){
                 showErr[inp]  = true
@@ -87,7 +86,7 @@ const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
                 //setIsError(true)
               
             }else{
-              //console.log(inp)
+              //
               err[0]  =false
               showErr[inp]  = false
                setShowErr({...showErr})
@@ -112,7 +111,7 @@ const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
         if(!err[0]) uploadFile(input);
         
           
-          // console.log(err,isError) 
+          // 
     
     } 
    
@@ -141,34 +140,20 @@ const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
     
      f_.append('image',f.image)
 
-     const options = {
-       method: 'POST',
-       headers: { 'content-Type': 'multipart/form-data' },
-        data: f_,
-       url:'/api/fileupload',
-     };
+     await  makeRequest('/api/fileupload',{f_},(err, out)=>{
+      if(err) return getToast('Message Sending Error',err.message,'error',4000,'top'); setLoading(false)
    
-     try {
-        let d  = await axios(options)
-        let out = d.data
-        // let d  = await axios.post("/api/chat/post-register",formData,options)
-         if(out.suc){
-           let img = out.img_dir[0].path
-           console.log(img, ' IS IMG')
-         // input['image']   =img
-        //  setInput({...input,image:img})
-          sendData(img,input.name)
-         }
- 
- 
-     } catch (error) {
-       setLoading(false)
-       getToast('Login Failed',error.message,'error',3000)
-        console.log(error," IS ERROR",error.message)
-     }
- 
-     
- 
+        if(out.suc){
+          let img = out.img_dir[0].path
+          
+        // input['image']   =img
+       //  setInput({...input,image:img})
+         sendData(img,input.name)
+        }
+      
+      },'POST',{ 'content-Type': 'multipart/form-data' } )
+
+
 
    ////////////////////////////////////////////////////////////////////////////////
 
@@ -179,55 +164,38 @@ const  getToast   = (title, message,type='success',time=3000,potision='top')=>{
     const sendData   = async(dimage,dname)=>{
      ///this method is call by method that upload image because 
      //we upload data if the image upload is don
-      const options = {
-        method: 'POST',
-        headers: { 'content-Type': 'application/json' },
-        data: {...input,image:dimage},
-        url:'/api/chat/post-register',
-      };
-    
-      try {  
-         let d  = await axios(options)
-         // let d  = await axios.post("/api/chat/post-register",formData,options)
-         
-          let out   = d.data
-          console.log(out)
-         if(out.suc){ 
+
+     await  makeRequest('/api/chat/post-register',{...input,image:dimage},(err, out)=>{
+      if(err) return getToast('Message Sending Error',err.message,'error',4000,'top'); setLoading(false)
+   
+      if(out.suc){ 
         
-          setLoading(false) 
-           let  op  = {...doneData,done:true,image_url:dimage,user_name:dname}
-           console.log(op)
-           setDoneData(op)
-
-
-
-           console.log(doneData)
-          setTimeout(()=>{
-            setDoneData(op)
-                getToast('Registration done','Welcome on board')
-          },2000)
-         }else{  
-            setLoading(false) 
-            console.log(out.err,'ERR ARRA')
-
-            out.err.forEach((er,i)=>{
-               let  time  = (i+1)*1000
-              getToast('Registration Failed',er,'error',3000+time)
-             
-           })
+        setLoading(false) 
+         let  op  = {...doneData,done:true,image_url:dimage,user_name:dname}
          
+         setDoneData(op)
 
+
+
+         
+        setTimeout(()=>{
+          setDoneData(op)
+              getToast('Registration done','Welcome on board')
+        },2000)
+       }else{  
+          setLoading(false) 
+          
+
+          out.err.forEach((er,i)=>{
+             let  time  = (i+1)*1000
+            getToast('Registration Failed',er,'error',3000+time)
            
-         }
-
-
-      } catch (error) {
-        setLoading(false)
-        getToast('Login Failed',error.message,'error',3000)
-        // console.log(error," IS ERROR",error.message)
-      }
-
+         })
+         
+       }
       
+      },'POST')
+
     }
 
 

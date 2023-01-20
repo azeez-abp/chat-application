@@ -10,6 +10,7 @@ import SideBar from './Pages/ChatContent.js/Header';
 import ChartBoard from './Pages/ChatContent.js/ChartBoard';
 import { MyChat } from './Pages/ChatContent.js/MyChat';
 import { hasLoggedIn } from './HasLoggedIn';
+import { makeRequest } from './request';
 import { 
   Box, 
   useToast,
@@ -28,15 +29,19 @@ export const Chat  =  ()=>{
     const history  = useNavigate()
     const toast = useToast()
     const [load,setLoad]  = useState(false)
-    const [firstload,firstloadUpdaterFunction]  = useState(false)
-    const [mycontact, setMyContact] = useState([]) 
+    //const [firstload,firstloadUpdaterFunction]  = useState(false)
+    //const [mycontact, setMyContact] = useState([]) 
 
     const {
-      user,setUser,
-      userInfo,setUserInfo,
-      chats,setChats,
+     // user,
+      setUser,
+      userInfo,
+      setUserInfo,
+     // chats,
+      setChats,
       setHasError,
-      selectedChat,setSelectedChat,
+      // selectedChat,
+      // setSelectedChat,
       setShowActionMenue,
 
       
@@ -48,51 +53,37 @@ export const Chat  =  ()=>{
 
 
     const getMyChatList = async (url,user_id)=>{
-      const options = {
-          method: 'POST',
-          headers: { 
-          //  'Content-Type': 'application/x-www-form-urlencoded',
-            'Content-Type': 'application/json',
-            'authorization': 'Bearer '+GetToken(),
-           },
-          
-          // body:  {userID:inp},
-           data:  {userID:user_id },
-          url:app_domain_proxy+"/api/chat/"+url,
-        };
-        try {
-            let d  =  await axios(options)
-           let out  = d.data
-           
-             
-             if(out.chat.length>0){
-               const listChat  = [...out.chat] 
-               const listChatUser  = [...out.users] 
-               setUser( listChatUser)
-               setChats(listChat)
-                 let chId    = {}
-               listChat.forEach(l=>{
-                   chId[l._id] =false
-               })
-               setShowActionMenue(chId )
-              
-             }else{
-              
-              setTimeout(()=>{
-                setUser([])   
-              },4000)
-              
-               
-              //  setUser({})
-             }
-           
-        } catch (error) {
-          
+
+      await  makeRequest("/api/chat/"+url,{},(error, out)=>{
+        if(error) {
           setHasError({is_in:true,info:error.message })
           setTimeout(()=>{setHasError({is_in:false,info:'' })},5000)
-           
+          setLoad(false) 
+          return getToast('Message Sending Error',error.message,'error',4000,'top');
         }
        
+ 
+          if(out.chat.length>0){
+            const listChat  = [...out.chat] 
+            const listChatUser  = [...out.users] 
+            setUser( listChatUser)
+            setChats(listChat)
+              let chId    = {}
+            listChat.forEach(l=>{
+                chId[l._id] =false
+            })
+            setShowActionMenue(chId )
+           
+          }else{
+           
+           setTimeout(()=>{
+             setUser([])   
+           },4000)
+         
+          }
+        
+        },'POST' )
+      
       }
           
    //////////////////////check user  lof=gin/////////////////////////////////////////////

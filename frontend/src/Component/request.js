@@ -3,15 +3,15 @@ import { app_domain_proxy } from './app_domain';
 
 import axios from 'axios'
 
-  export  const makeRequest = async (url,data,cb,mtd=null)=>{
-
+  export  const makeRequest = async (url,data,cb,mtd=null,headers_opt=null)=>{
+  let   header_setting  = headers_opt !==null ?headers_opt: { 
+    //  'Content-Type': 'application/x-www-form-urlencoded',
+      'Content-Type': 'application/json',
+      'authorization': 'Bearer '+GetToken(),
+     }
         const options = {
             method: mtd?mtd:'POST',
-            headers: { 
-            //  'Content-Type': 'application/x-www-form-urlencoded',
-              'Content-Type': 'application/json',
-              'authorization': 'Bearer '+GetToken(),
-             },
+            headers:header_setting,
             
             // body:  {userID:inp},
              data:  data,

@@ -17,9 +17,8 @@ import {
   import { GetToken } from '../../../Token/Token'
   import UserList from './UserList'
   import { DataStore } from '../../../Context/ChartProvider'
-  //import { useNavigate } from 'react-router-dom'
+  import { makeRequest } from '../../request'
 
-  import { app_domain_proxy } from '../../app_domain'
 
 
 
@@ -51,43 +50,32 @@ export const Drawers =(Element,Child)=> {
   //  },[chats]) 
 
  const getData  = async (inp,setSearchItemLoadingCb,setNotFoundcb)=>{
-    const options = {
-        method: 'POST',
-        headers: { 
-        //  'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer '+GetToken(),
-         },
-        
-        // body:  {userID:inp},
-         data:  {search:inp[0]},
-        url:app_domain_proxy+"/api/chat/getuser",
-      };
-      try {
-          let d  =await axios(options)
-         let out  =d.data
-         
-           if(out.users.length>0){
-             const userSearch = {...out.users} 
-             setSearchData(out.users)
-             setSearchItemLoadingCb(true)
-         
-           }else{
-            setNotFoundcb(inp[0]+" not found")
-            setTimeout(()=>{
-             setSearchData([])   
-            },4000)
-            
-             
-            //  setUser({})
-           }
-         
-      } catch (error) {
-        if(error.response.status===401){
-          getToast('EXPIRED SESSION','Login again',2000,'top-left')
-        }
-         
+
+  makeRequest("/api/chat/getuser",{search:inp[0] },(err,data)=>{
+    if(err){
+     setIsLoading(false)
+     return getToast('Error Occure',err.message,'error',5000,'top')
+    }
+      if(err){
+         console.log(err, " ERR in Dreawer.jsx")
+        return false
       }
+    if(data.users.length>0){
+      const userSearch = {...data.users} 
+      setSearchData(data.users)
+      setSearchItemLoadingCb(true)
+  
+    }else{
+     setNotFoundcb(inp[0]+" not found")
+     setTimeout(()=>{
+      setSearchData([])   
+     },4000)
+
+    }
+  
+})
+ 
+
      
    }
 
@@ -205,42 +193,33 @@ export const Drawers =(Element,Child)=> {
   
 
   const getMyChatList = async (url,user_id,cb)=>{
-    
-    const options = {
-        method: 'POST',
-        headers: { 
-        //  'Content-Type': 'application/x-www-form-urlencoded',
-          'Content-Type': 'application/json',
-          'authorization': 'Bearer '+GetToken(),
-         },
-        
-        // body:  {userID:inp},
-         data:  {userID:user_id },
-        url:"/api/chat/"+url,
-      };
-      try {
-          let d  =  await axios(options)
-         let out  = d.data
-           
 
-           if(out.chat.hasOwnProperty('_id')){
 
-             const listChat  = [...chats,out.chat] 
-            //  setUser(listChat)
-            cb( listChat)
-            
-            
-           }else{
-            
-           }
-         
-      } catch (error) {
-
-        //if(error.response.status==401){
-         // getToast('EXPIRED SESSION','Login again',2000,'top-left')
-        //}
-         
+    makeRequest("/api/chat/"+url,{userID:user_id },(err,data)=>{
+      if(err){
+       setIsLoading(false)
+       return getToast('Error Occure',err.message,'error',5000,'top')
       }
+ 
+      if(data.chat.hasOwnProperty('_id')){
+        
+
+          const listChat  = [...chats,data.chat] 
+         //  setUser(listChat)
+         cb( listChat)
+         
+         
+        }else{
+         
+       
+      }
+
+    
+})
+    
+
+
+
      
     }
  

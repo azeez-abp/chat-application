@@ -1,12 +1,8 @@
 import React, {useState,useEffect} from 'react'
 
 export default function MousePostion() {
-
-
     const [coords, setCoords] = useState({x: 0, y: 0});
-
     const [globalCoords, setGlobalCoords] = useState({x: 0, y: 0});
-
   useEffect(() => {
     // 👇️ get global mouse coordinates
     const handleWindowMouseMove = event => {

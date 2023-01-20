@@ -97,7 +97,7 @@ let GetAllMessage = (router)=>{
          var message  = await MessageDB.deleteMany({chaId:req.body.id._id})
           // var chat  = await ChatDB.findOne({_id:req.body.id._id });
         // var messages = await MessageDB.populate(chat/*message ref chat (chat did not ref message)*/,{path:'chats.chatId'/*chatId col in message table ref chats*/,select:'content sender,chatId'})
-        let m   = [['a'].lenght+" deleted"]
+        let m   = [message.lenght+" deleted"]
         if(req.body.deleteChat){
           var  chat  = await ChatDB.deleteOne({chaId:req.body.id._id})
           m  = [...m,"Chat also deleted"]
