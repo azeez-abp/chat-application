@@ -31,7 +31,7 @@ const io1  = (port)=>{
 
   const io = require('socket.io')(port, {
     cors: {
-        origin: "http://localhost:7000",// addresses,,
+        origin: addresses,//"http://localhost:7000",// addresses,,
         methods: ["GET", "POST"],
         transports: ['websocket', 'polling'],
         credentials: true,

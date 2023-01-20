@@ -50,7 +50,18 @@ export default function SingleChat({getMyChatList}) {
 
   //let socket  = io('/')
 
-let socket  = io('http://localhost:7000'/*backend url*/,
+// let socket  = io('http://localhost:7000'/*backend url*/,
+
+// {
+//  // origin: "http://localhost:",
+//   methods: ["GET", "POST"],
+//   transports: ['websocket', 'polling'],
+//   credentials: true,
+//   pingTimeout: 60000
+// }
+// )
+
+let socket  = io('/'/*backend url*/,
 
 {
  // origin: "http://localhost:",
@@ -60,6 +71,7 @@ let socket  = io('http://localhost:7000'/*backend url*/,
   pingTimeout: 60000
 }
 )
+
 socket.on("connect_error", () => {
   setTimeout(() => {
     socket.connect();
