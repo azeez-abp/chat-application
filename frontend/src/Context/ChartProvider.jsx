@@ -68,7 +68,7 @@ return (<ChartContext.Provider value={{
     )
 
 }
-
+ 
 export default ChartProvider;
 export const DataStore  = ()=>{////import this to all child that need their data store in the ChartProvider
 return useContext(ChartContext)   

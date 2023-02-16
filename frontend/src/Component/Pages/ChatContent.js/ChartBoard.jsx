@@ -13,7 +13,7 @@ export default function ChartBoard({getMyChatList}) {
 
   const f = (e)=>{   
     const co =    handleMouseMove(e)
-     console.log(e,'EVENT')
+    
      sc({
          /////////////////
          sx:e.screenX,
