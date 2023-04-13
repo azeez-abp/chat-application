@@ -17,7 +17,7 @@ function MessageBody({messages}) {
             
                  }}>
     { messages && messages.map( (message, i) => (
-                <p className='p-message-container' key={message._id} style={{marginBottom:"3px"}}>
+                <div className='p-message-container' key={message._id} style={{marginBottom:"3px"}}>
              
                  {( message.sender._id !==userInfo._id ) ?<>
                     <Box 
@@ -58,7 +58,7 @@ function MessageBody({messages}) {
                  >
                  {message.content}
              </Box> }
-        </p>
+        </div>
          )
  
 

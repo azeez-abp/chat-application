@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+
+kind: Deployment
+
+metadata:
+
+  name: mongo-express
+
+  labels:
+
+    app: mongo-express
+
+spec:
+
+  replicas: 2
+
+  selector:
+
+    matchLabels:
+
+      app: mongo-express
+
+  template:
+
+    metadata:
+
+      labels:
+
+        app: mongo-express
+
+    spec:
+
+      containers:
+
+      - name: mongo-express
+
+        image: mongo-express:latest
+
+        ports:
+
+        - containerPort: 80
+
+        env:
+           - name: ME_CONFIG_MONGODB_ADMINUSERNAME
+             valueFrom: 
+              secretKeyRef:
+                name: chat-app-mongo-express-secret #metadata name
+                key: mongo-express-root-username
+           - name: ME_CONFIG_MONGODB_ADMINPASSWORD
+             valueFrom: 
+               secretKeyRef:
+                 name: chat-app-mongo-express-secret #metadata name
+                 key: mongo-express-root-password
+           - name: ME_CONFIG_MONGODB_SERVER
+             valueFrom: 
+               configMapKeyRef:
+                 name: mongo-config #metadata name
+                 key: mongo-url
+
+ 

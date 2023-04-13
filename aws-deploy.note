@@ -1,0 +1,4 @@
+1. create ec2 
+2. ssh into it
+3. sudo apt-get update
+4. sudo git clone <project_name>

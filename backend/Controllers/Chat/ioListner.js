@@ -114,7 +114,7 @@ const setupEvent  = (client,eventName='setup',peers,channels,cb )=>{
 
 const joinedEvent  = (client,eventName='joined',serverIo)=>{
     client.on(eventName,(num,socket_id,obj)=>{//number data must be the first, str data follw then  
-       
+       console.log("dcndc")
     })
 }
 

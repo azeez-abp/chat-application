@@ -1,0 +1,43 @@
+Write manifest file yaml
+Supply the file to kubernete (kutecltl apply -f filename) 
+Kubernetes stores the file (an application’s desired state) in a database called the Key-Value Store (etcd).
+Kubernetes then implements the desired state(from param set may be running) on all the relevant applications within the cluster
+Kubernetes continuously monitors the elements of the cluster to make sure the current state of the application does not vary from the desired state.
+
+Developer => MasterNode => Api => etcd => apply the state
+
+Key-Value Store (etcd)
+The Key-Value Store, also called etcd, is a database Kubernetes uses to back-up all cluster data.
+
+Controller
+The role of the Controller is to obtain the desired state from the API Server. It checks the current state of the nodes it is tasked to control, and determines if there are any differences, and resolves them, if any.
+
+Scheduler
+A Scheduler watches for new requests coming from the API Server and assigns them to healthy nodes. It ranks the quality of the nodes and deploys pods to the best-suited node. If there are no suitable nodes, the pods are put in a pending state until such a node appears.
+
+
+MasterNode => WortkerNode
+
+Kubelet (Task watcher,  from master API server)
+The kubelet runs on every node in the cluster. It is the principal Kubernetes agent. By installing kubelet, the node’s CPU, RAM, and storage become part of the broader cluster. It watches for tasks sent from the API Server, executes the task, and reports back to the Master. It also monitors pods and reports back to the control panel if a pod is not fully functional. Based on that information, the Master can then decide how to allocate tasks and resources to reach the desired state.
+
+
+Container Runtime (Image Puller)
+The container runtime pulls images from a container image registry and starts and stops containers. A 3rd party software or plugin, such as Docker, usually performs this function.
+
+Kube-proxy
+The kube-proxy makes sure that each node gets its IP address, implements local iptables and rules to handle routing and traffic load-balancing.
+
+deployment(NODE) == pod ==> container
+
+Kubernetes Services (Consistent and assigns ip to pod)
+
+How Do Kubernetes Services Work?
+Pods are associated with services through key-value pairs called labels and selectors. A service automatically discovers a new pod with labels that match the selector.
+configMap1 ===> service1 ===> deployment2   =====>private
+
+configMap1 ===> service3 ===> deployment3   =====> public
+POD WILL BE CREATED BY KUBERNETE AND Container FROM DOCKER
+
+
+

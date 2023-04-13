@@ -6,11 +6,11 @@
     "engines": {
         "node": "16.16.0",
         "npm": "8.11.0"
-      },
+    },
     "scripts": {
         "start": "nodemon backend/server.js",
         "dev": "npm run start --open",
-        "build":"npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production",
+        "build": "npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production",
         "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --legacy-peer-deps --prefix frontend && npm run build --prefix frontend --mode production"
     },
     "keywords": [],
@@ -29,6 +29,7 @@
         "express-session": "^1.17.3",
         "image-size": "^1.0.2",
         "jsonwebtoken": "^8.5.1",
+        "makefile-for-js": "^0.0.6",
         "mongoose": "^6.5.0",
         "multer": "^1.4.5-lts.1",
         "mysql2": "^2.3.3",

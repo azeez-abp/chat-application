@@ -18,6 +18,7 @@ import { useNavigate  } from 'react-router-dom'
 import MessageBody from './MessageBody'
 import {io} from 'socket.io-client'
 import { makeRequest } from '../../request'
+import {app_domain_proxy2} from '../../app_domain'
 
 export default function SingleChat({getMyChatList}) {
     const [viewSelectedChatProfile,setViewSelectedChatProfile]    =useState(false)
@@ -26,6 +27,8 @@ export default function SingleChat({getMyChatList}) {
     const  [newMessage,setNewMessage]    = useState ('')
     const  [hasJoied,setHasJoined]    = useState (false)
     const  [typingIn,setTypingIn]    = useState (false)
+    const [hasSendMessage,setHasSendMessage]  = useState(false)
+    const [messageData,setMessageData]  =useState(null)
     let  [enterCount,setEnterCount]  = useState(0)
     const history = useNavigate()
     const toast  = useToast()
@@ -61,7 +64,33 @@ export default function SingleChat({getMyChatList}) {
 // }
 // )
 
-let socket  = io('/'/*backend url*/,
+         ////////////////////////////////////////////////
+     
+         const sendMessage  = (e)=>{
+          if(newMessage){
+           
+                 setNewMessage('')
+                 makeRequest('/api/chatline/sendmessage',{content:newMessage,chatId:selectedChat[0]._id},(err, data)=>{
+                    if(err) return getToast('Message Sending Error',err.message,'error',4000,'top')
+                    
+                    if(data.suc){ 
+                    setMessages([...messages,data.message])
+                        setHasSendMessage(true)
+                        setMessageData(data)
+                  
+                    };   
+              } )
+          }
+        }
+// socket.engine.on("2222222connection_error", (err) => {
+//   console.log(err);
+
+    useEffect(
+  
+      ///////////////////
+      ()=>{
+
+        let socket  = io(`${app_domain_proxy2}`/*backend url*/,
 
 {
  // origin: "http://localhost:",
@@ -70,6 +99,7 @@ let socket  = io('/'/*backend url*/,
   credentials: true,
   pingTimeout: 60000
 }
+
 )
 
 socket.on("connect_error", () => {
@@ -77,27 +107,31 @@ socket.on("connect_error", () => {
     socket.connect();
   }, 1000);
 });
-// socket.engine.on("2222222connection_error", (err) => {
-//   console.log(err);
-// });
+
+    if(hasSendMessage) {
+      socket.emit("new-message-send",1,userInfo._id,[...messages,messageData.message])
+      socket.on("has-send-message",fetchChatsMessages)
+      setHasSendMessage(false)
+    }  
+
+
+
 const userHasJoied = ()=>{
-  socket.on('user-enter',(user_)=>{
-    if(user_._id != userInfo._id && enterCount===0){
-        setTypeValue(`${user_.fn} just enter the room `)
-        enterCount  = enterCount+1
-       setEnterCount(enterCount)
-    }
-   })
-
-}
-
-
-    useEffect(
   
-      ///////////////////
-      ()=>{
+          socket.on('user-enter',(user_)=>{
+           
+            if(user_._id != userInfo._id && enterCount===0){
+                setTypeValue(`${user_.fn} just enter the room `)
+                enterCount  = enterCount+1
+               setEnterCount(enterCount)
+            }
+           })
+        
+        }
+        
+
     ///////////////////////////////////////////
- if(selectedChat.length>0){/////listed peopleyou chat with at the sidebar
+ if(selectedChat.length>0){/////listed people you chat with at the sidebar
     socket.on('connect',()=>{
       selectedChat.length>0 && socket.emit('setup',{...userInfo,room_id:socket.id,chat_id:selectedChat[0]._id})
 
@@ -123,8 +157,31 @@ const userHasJoied = ()=>{
     //socket.emit('setup',{...userInfo,room_id:socket.id})
     //socket.on('typin')
     
+
+    socket.on('has-send-message',(num,id,messages_)=>{
+  
+      if(id!==userInfo._id){
+         setMessages(messages_)
+      }
+   })  
     
-    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    return () => {
+      socket.disconnect();
+    }
     ///////////////////
       //  getToast('Message Sending Error','doen','success',4000,'top')
            } //if end
@@ -136,21 +193,9 @@ const userHasJoied = ()=>{
 
 
    
-  useEffect(()=>{
-    let isApiSubscribed =true
 
-    socket.on('has-send-message',(num,id,messages_)=>{
-     
-       if(id!==userInfo._id){
-        setMessages(messages_)
-       }
-    })     
- 
-    return () => {
-      // cancel the subscription
-      isApiSubscribed = false;
-  };
-   },[])
+
+    
 
 
 
@@ -192,21 +237,7 @@ fetchChatsMessages()
 //[]
 )
 
-const sendMessage  = (e)=>{
-  if(newMessage){
-   
-         setNewMessage('')
-         makeRequest('/api/chatline/sendmessage',{content:newMessage,chatId:selectedChat[0]._id},(err, data)=>{
-            if(err) return getToast('Message Sending Error',err.message,'error',4000,'top')
-            
-            if(data.suc){ 
-                setMessages([...messages,data.message])
-                socket.emit("new-message-send",1,userInfo._id,[...messages,data.message])
-                socket.on("has-send-message",fetchChatsMessages)
-            };
-      } )
-  }
-}
+
 
 const userIsTyping  = ()=>{
 

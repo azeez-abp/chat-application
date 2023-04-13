@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: chat-app-mongo-db
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 256Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongo-service #link to configmap
+spec:
+  selector:
+    app: mongo  # link to deployment spec .selector. matchLabel
+  ports: 
+    - port: 27017
+      targetPort: 27017
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongo
+spec:
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mongo 
+  template:
+    metadata:
+      labels:
+        app: mongo
+    spec:
+      schedulerName: k8s-technical-writer
+      containers:
+      - name: mongo
+        image: mongo:6.0
+        imagePullPolicy: "Always"
+        ports:
+        - containerPort: 27017
+        env: 
+          - name: MONGO_INITDB_ROOT_USERNAME
+            valueFrom: 
+              secretKeyRef:
+                name: chat-app-mongo-secret #metadata namae
+                key: mongo-root-username
+          - name: MONGO_INITDB_ROOT_PASSWORD
+            valueFrom: 
+               secretKeyRef:
+                 name: chat-app-mongo-secret #metadata namae
+                 key: mongo-root-password
+        volumeMounts:
+        - mountPath: /data/db
+          name: mongodb 
+      volumes:
+      - name: mongodb
+        persistentVolumeClaim:
+          claimName: chat-app-mongo-db
+         
+          
+
+#kind meatdata spec
+#apiVersion: apps/v1
+#kind: Deployment
+
+#metadata
+#spec => selector , template, replicas, volume , conatiner
+#template => metdata , spec

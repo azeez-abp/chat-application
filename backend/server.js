@@ -17,13 +17,15 @@ var whitelist = [
 '127.0.0.1:7000',
 'http://localhost:3000',
 'localhost:7000',
+'localhost:3000',
+
 'undefined',
 'https://abp-chat-app.herokuapp.com',
 'https://embracechatapp.azurewebsites.net'
 ]
 var corsOptions = {
   origin: function (origin, callback) {
-    
+    console.log(origin,"===============================")
     if (whitelist.indexOf(origin) !== -1) {
       callback(null, true)
     } else {
@@ -35,9 +37,8 @@ var corsOptions = {
 
 corsOptionsDelegate = function (req, callback) {
   var corsOptions;
- // console.log(req.headers['host'],"tyu")
   if (whitelist.indexOf(req.header('host')) !== -1) {
-    //corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
+     corsOptions = { origin: true } // reflect (enable) the requested origin in the CORS response
   } else {
     throw new Error("Rejection by cors")
     //corsOptions = { origin: false } // disable CORS for this request
@@ -49,7 +50,7 @@ corsOptionsDelegate = function (req, callback) {
 
 app.use(express.urlencoded({extended:false}))
 app.use(express.json());
-//app.use(cors(corsOptionsDelegate ));
+app.use(cors(corsOptionsDelegate ));
 app.use(cors());
 app.use(require(path.join(__dirname,'Middleware','HeaderOption')))
 app.use(cookie_parser());
@@ -107,7 +108,7 @@ if (process.env.NODE_ENV === 'production') {
 //require('./Controllers/Chat/io').io1(5200)
 
 require(path.join(__dirname,'./Controllers/Chat/io') ).ioexpress(app).listen(PORT,()=>{
- // console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
+ console.log(`CONNECTED @ http://127.0.0.1:${PORT}`)
 });
 
 

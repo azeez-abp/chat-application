@@ -1,5 +1,5 @@
 let Chat = (router)=>{
-    console.log("wqeda")
+   // console.log("wqeda")
    require('./Route/Login')(router)
    require('./Route/Register')(router) 
    require('./Route/GroupChat').CreateGroup(router)   

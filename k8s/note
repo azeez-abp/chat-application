@@ -1,0 +1,40 @@
+kubectl explain deployment
+kubectl explain deployment.spec.replicas
+kubectl apply -f hello-world.yaml
+kubectl get pod
+kubectl get secret
+kubectl create namespace react-docker
+kubectl config set-context --current --namespace=react-docker
+kubectl get pods
+kubectl get services
+kubectl get all
+kubectl describe meta data name
+kubeval base-valid.yaml
+kubectl apply -f ./k8s/mongo/secret.yml
+kubectl describe deployment.apps/mongo pod name
+kubectl apply -f load-balancer.yaml
+kubectl get services -w
+kubectl scale deployment react-docker --replicas=10
+kubectl get deployment -w
+echo -n '@abp-azeez' | base64
+kubectl describe mongo-service
+kubectl exec -it mongo-568d7bfcbf-kcx5c sh
+kubectl exec deploy/mydeployment -- date
+kubectl exec mypod -c ruby-container -i -t -- bash -il
+kubectl exec mongo-568d7bfcbf-kcx5c -i -t -- bash -il
+kubectl exec -it container_name bash
+kubectl exec -it pod_name -c container_name bash
+kubectl get pods -o wide
+kubectl apply -f ./k8s/mongo/configMap.yml
+kubectl apply -f ./k8s/web/configMap.yml
+kubectl apply -f ./k8s/web/secret.yml
+kubectl apply -f ./k8s/web/nginx.yml
+
+kubectl create -f ./k8s/mongo/mongo-secret.yml
+kubectl create -f ./k8s/mongo/mongo-deployment.yml
+kubectl create -f ./k8s/mongo/mongo-service.yml
+mongodb://[username:password@]host1[:port1]
+mongodb://abp-azeez:@abp-azeez@10.99.204.27:27017
+
+kubectl describe pod mongo-express-778d6b6c69-dtp6j pod-missing-config
+NODE ==> POD ==> CONTAINER (built from image)

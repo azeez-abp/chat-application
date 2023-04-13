@@ -60,13 +60,15 @@ const logout   = async ()=>{
 
    setIsLoading(true)
 
+   console.log("wertyuiop[")
 
    makeRequest('/api/chat/logout',{},(err,data)=>{
+    
      if(err){
       setIsLoading(false)
       return getToast('Error Occure',err.message,'error',5000,'top')
      }
-
+     
      if(data.suc){
        localStorage.removeItem(TOKEN_NAME)
        localStorage.removeItem(CHAT_LOGIN_STATUS)
@@ -88,6 +90,24 @@ const openModal  = ()=>{
 
 return (
    <>
+   {isLoading && (<div style={{
+    position:"absolute",
+    backgroundColor:"rgba(0,0,0,.5)",
+    left:"0px",
+    right:"0px",
+    bottom:"0px",
+    top:"0px",
+    zIndex:3
+
+    }
+    }>
+       <div className="log-out"
+      >
+
+         <h1 >Loging out ......</h1>
+         </div>
+    </div>)}
+
      <Box 
         display={"flex"}
         justifyContent={'space-between'}
