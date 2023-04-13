@@ -22,11 +22,11 @@ const deleteOneChat  = (preAction,postAction)=>{
     
 
 
-         for (let i = data.message.length; i > 0 ; i--) {
+       //  for (let i = data.message.length; i > 0 ; i--) {
          
          //  notifier('Request Successful', 'Success',data.message[i]);
-           notifier('Request Done',data.message[i-1],'success');
-         }
+           notifier('Request Done','message deleted','success');
+        // }
          
      let remChat  = chats.filter(f=>f._id !== chat._id)
       setChats(remChat)
