@@ -1,4 +1,118 @@
 1. create ec2 
 2. ssh into it
 3. sudo apt-get update
-4. sudo git clone <project_name>
+4. sudo git clone  https://github.com/azeez-abp/chat-application.git <project_name>
+5. install node => curl -s https://deb.nodesource.com/setup_16.x | sudo bash ;  sudo apt install nodejs -y;   node -v
+
+install nginix webserver
+ ssh -i "abp-key.pem" ubuntu@ec2-54-234-221-64.compute-1.amazonaws.com
+Install Mongo db
+sudo apt update 
+sudo apt upgrade 
+sudo apt install gnupg2
+wget -nc https://www.mongodb.org/static/pgp/server-6.0.asc
+cat server-6.0.asc | gpg --dearmor | sudo tee /etc/apt/keyrings/mongodb.gpg >/dev/null
+sudo sh -c 'echo "deb [ arch=amd64,arm64 signed-by=/etc/apt/keyrings/mongodb.gpg] https://repo.mongodb.org/apt/ubuntu jammy/mongodb-org/6.0 multiverse" >> /etc/apt/sources.list.d/mongo.list
+sudo apt update
+sudo apt install mongodb-org
+
+Secure mongodb
+connect to mongosh
+mongosh 
+switch to admin 
+use admin
+run this command to create user 
+db.createUser({
+  user: "username",
+  pwd: "password",
+  roles: [ { role: "root", db: "admin" } ]
+}) 
+172.31.83.57
+dbPath: /var/lib/mongodb
+mongodb+srv://azeez:@Bch2009021@172.31.83.57 --authenticationDatabase admin
+Enable authetication:
+
+sudo nano /etc/mongod.conf
+
+Find the security section in the configuration file and add the following lines:
+security:
+  authorization: enabled
+Restart the MongoDB service:
+sudo systemctl restart mongod 
+
+
+To restrict access to MongoDB, follow these steps:
+
+Edit the MongoDB configuration file:
+sudo nano /etc/mongod.conf 
+
+Find the net section in the configuration file and add the following lines:
+net:
+  bindIp: 127.0.0.1,192.168.1.0/24
+Replace 127.0.0.1,192.168.1.0/24 with the desired IP addresses or ranges to allow. This will restrict access to the database to the specified IP addresses or ranges.
+
+Save the changes and exit the text editor.
+Restart the MongoDB service:
+sudo systemctl restart mongod 
+
+mongodb://azeez:@Bch2009021@172.31.83.57:27071
+mongosh -u azeez -p @Bch2009021 
+
+Check the status of the firewall:
+sudo ufw status
+sudo ufw enable 
+sudo ufw allow 27017
+sudo ufw allow 54.234.221.64
+ps aux | grep “mongod”
+sudo ufw deny from 203.0.113.100
+sudo lsof -i | grep mongo 
+curl -4 icanhazip.com   => this will return the machine public ip
+mongo "mongodb://azeez:@Bch2009021@54.234.221.64:27017"
+ssh -i ~/.ssh/abp-key.pem ubuntu@ec2-54-234-221-64.compute-1.amazonaws.com
+
+uninstall mongo
+sudo service mongod stop
+sudo apt-get purge mongodb-org*
+sudo rm -r /var/log/mongodb
+sudo rm -r /var/lib/mongodb
+////////////////////////////////////////////////////
+uninstall node
+ sudo rm -R -f /usr/lib/node_modules/*
+sudo apt remove nodejs npm
+cd ~
+curl -sL https://deb.nodesource.com/setup_16.16.0 | sudo bash -
+
+cat /etc/apt/sources.list.d/nodesource.list\ deb https://deb.nodesource.com/node_16.16.0 focal main\ deb-src https://deb.nodesource.com/node_16.x focal main
+///////////////////////////////////////////////////
+sudo npm install pm2@latest -g
+
+///////////////////////////////////
+sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
+sudo apt install nginx
+sudo nginx -t
+sudo service nginx restart
+sudo service nginx stop
+sudo service nginx start
+sudo service nginx status
+sudo ln -s /etc/nginx/sites-available/application.conf /etc/nginx/sites-enabled/application.conf
+sudo nano /etc/nginx/sites-available/application.conf
+
+
+/////////////////////////////////////////////////////////////////
+sudo pm2 restart backend/server.js
+sudo pm2 reload app_name
+ sudo pm2 stop app_name
+ sudo pm2 delete app_name 
+ pm2 list
+ pm2 monit  monitor
+ pm2 reload all
+pm2 stop all
+
+ /////////////////////////////////////////////////////////////////////
+  sudo nano frontend/src/Component/app_domain.js
+
+set up your env
+add backend port to inbound rule
+
+http://3.93.242.52/chats
