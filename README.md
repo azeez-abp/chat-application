@@ -1,0 +1,1 @@
+[![Build Status](https://dev.azure.com/adioadeyoriazeez/abp-chat-app/_apis/build/status%2Fabp-chat-app%20(1)?branchName=master)](https://dev.azure.com/adioadeyoriazeez/abp-chat-app/_build/latest?definitionId=17&branchName=master)
