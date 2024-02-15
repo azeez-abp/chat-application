@@ -29,7 +29,7 @@ db.createUser({
 }) 
 172.31.83.57
 dbPath: /var/lib/mongodb
-mongodb+srv://azeez:@Bch2009021@172.31.83.57 --authenticationDatabase admin
+mongodb+srv://azeez:__#$2001__++__@172.31.83.57 --authenticationDatabase admin
 Enable authetication:
 
 sudo nano /etc/mongod.conf
