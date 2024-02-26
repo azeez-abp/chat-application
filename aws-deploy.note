@@ -29,7 +29,7 @@ db.createUser({
 }) 
 172.31.83.57
 dbPath: /var/lib/mongodb
-mongodb+srv://azeez:__#$2001__++__@172.31.83.57 --authenticationDatabase admin
+mongodb+srv://<username>:<password>@172.31.83.57 --authenticationDatabase admin
 Enable authetication:
 
 sudo nano /etc/mongod.conf
@@ -55,7 +55,7 @@ Save the changes and exit the text editor.
 Restart the MongoDB service:
 sudo systemctl restart mongod 
 
-mongodb://azeez:@Bch2009021@172.31.83.57:27071
+mongodb://<username>:<passwpord>@172.31.83.57:27071
 mongosh -u azeez -p @Bch2009021 
 
 Check the status of the firewall:
